@@ -1,0 +1,18 @@
+= Power Catch-up – Everything Practical and Important in Java 9 to 13
+
+This repository is a HTML5 https://asciidoctor.org/[Asciidoctor] / 
+https://asciidoctor.org/docs/asciidoctor-revealjs[Asciidoctor-RevealJS]
+based presentation about everyting new and important since Java 8.
+
+== Slides
+Can be found online at https://bentolor.github.io/java9to13/
+
+The sources are in `docs`
+
+For licensing details see the accompagning `LICENCE` file in the directory.
+
+== Example code
+Mostly used to test/present different code. To run set your `JDK_HOME` to a 
+Java 13+ installation and run with `./gradlew test`
+
+For licensing details see the accompagning `LICENCE` file in the directory.
