@@ -1,0 +1,14 @@
+#!/usr/bin/java --source 11
+
+/**
+ * You can directly mark & execute this class (if JDK11+ is your default JDK).
+ *
+ * <p><b>Important:</b>
+ * Omit any {@code .java} file extension if you are using
+ * the shebang operator!</p>
+ */
+public class ExecutableJavaSource {
+    public static void main(String[] args) {
+        System.out.println("Hello " + args[0] + ". Executable .java source – Yay!");
+    }
+}
