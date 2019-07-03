@@ -1,0 +1,12 @@
+@font-face {
+    font-family: 'Indie Flower';
+    font-style: normal;
+    font-weight: 400;
+    src: url(Indie+Flower_400_normal.eot); /* http://fonts.gstatic.com/s/indieflower/v10/m8JVjfNVeKWVnh3QMuKkFcZVaUuD.eot */
+    src: local('☺'),
+        url(Indie+Flower_400_normal.eot?#iefix) format('embedded-opentype'), /* http://fonts.gstatic.com/s/indieflower/v10/m8JVjfNVeKWVnh3QMuKkFcZVaUuD.eot */
+        url(Indie+Flower_400_normal.woff2) format('woff2'), /* http://fonts.gstatic.com/s/indieflower/v10/m8JVjfNVeKWVnh3QMuKkFcZVaUuH.woff2 */
+        url(Indie+Flower_400_normal.woff) format('woff'), /* http://fonts.gstatic.com/s/indieflower/v10/m8JVjfNVeKWVnh3QMuKkFcZVaUuB.woff */
+        url(Indie+Flower_400_normal.ttf) format('truetype'), /* http://fonts.gstatic.com/s/indieflower/v10/m8JVjfNVeKWVnh3QMuKkFcZVaUuC99GUDg.ttf */
+        url(Indie+Flower_400_normal.svg#Indie+Flower_400_normal) format('svg'); /* http://fonts.gstatic.com/l/font?kit=m8JVjfNVeKWVnh3QMuKkFcZVaUuA&skey=cdda66716f19c532&v=v10#IndieFlower */
+}

@@ -1,0 +1,178 @@
+[background-image="manuscript.jpg"]
+== [tldr]#`tl;dr`#
+
+// Bild: "fine print"
+
+[.refs]
+--
+* Photo by https://de.freeimages.com/photographer/bjearwicke-46112[Benjamin Earwicker]
+* Another photo
+* lorem
+--
+
+[.notes]
+-- 
+* Motivation: Too long – didn't read – Eine komprimierte Zusammenfassung aller wichtigen Änderungen.
+* Challenge, denn 
+** High-level Überblick vs.
+** Viele wertvolle API-Details und damit Anschauungsmaterial / Codebeispiele
+--
+
+
+
+[%notitle,.bonuscontent,background-image="jdk-timeline.png",background-size="contain"]
+=== What happened
+
+[.refs]
+--
+* [Support Modell: https://craftsmen.nl/java-11-is-here-to-stay/]
+--
+
+[.notes]
+--
+What happened? You all heard of it!
+
+* New cadence – every 6 months new java major release
+* No support overlap → Support Cliff
+* Every 3 years a LTS; v11: 2018-09; next v17: 2021-09
+--
+
+
+[.decentlightbg,background-video="videos/fog-hands.mp4",background-video-loop="true",background-opacity="0.6"]
+=== » Everything-is-so-awful™ « 
+
+// ggf. 4-teiliges fragment: 
+// - titel stehen lassen
+// - Ein Bild nach dem anderen: Grab mit "8", 1 Ring, Cliff, Geld
+
+//[%step]
+1. *Oracle Java 8 installations are dead!* +
+   [.verydecent.x-small]#_Unmaintained:_ No $free & security- & bugfix updates.#
+2. Always *only 1 supported* Oracle Java 
+3. *Every 6 months* new major version; +
+   predecessor *expire the same day* +
+//   [.verydecent.x-small]#_Currently:_ Java 12 (expires: 2019-09-17)#
+4. You must *always pay in production* for Oracle Java
+
+[.refs]
+--
+* link:https://www.oracle.com/technetwork/java/java-se-support-roadmap.html[Oracle Java SE Support Roadmap]
+* https://access.redhat.com/articles/1299013[OpenJDK Life Cycle and Support Policy],
+--
+
+[.notes]
+-- 
+* Im Change Management sagt man ja oft: Für Änderung braucht es _Urgency_
+
+*Nachdem das klar ist: Publikumsfrage zu Vermutungsbestätigung*
+
+* Wer arbeitet schon mit aktuellen Java 12
+* Wer arbeitet vorrangig Java 8? → Wer mit Oracle JVM: könnte theoretisch Supportvertrag haben…
+* Wer traut sich, die Anderen zu ermutigen, dass Sie nicht Alleine sind mit Java Versionen 6 und älter?
+//* Wer schon mit 11 oder neuer? 
+
+Aus Projekten: Kenne ich die Prävalenz von Java 8 und älter.
+--
+
+
+
+[.lightbg,background-video="videos/flowers.mp4",background-video-loop="true",background-opacity="0.6"]
+//[transition="fade-out"]
+=== Love, peace & happiness…
+
+// [.col2.small]
+// --
+.Starting with Java 11
+* Oracle themselves releases OpenJDK + 
+  [.decent.x-small]#(icon:exclamation-triangle[] but only 6 month support cadence)#
+* OpenJDK _defacto identical_ to Oracle JDK
+* Numerous (new) OpenJDK-based options. +
+  [.decent.x-small]#Some with $free support#
+//--
+
+// [.col2.small.fragment]
+// --
+// .OpenJDK Suppliers
+// * https://adoptopenjdk.net/[AdoptOpenJDK] [decent]#(LTS: 4yr, 1yr overlap)#
+// * https://access.redhat.com/articles/1299013[Red Hat (IBM)] [decent]#(v8: 2023 v11: 2024)#
+// * https://aws.amazon.com/corretto/[Amazon Corretto], 
+//  https://github.com/alibaba/dragonwell8[Alibaba], 
+//  https://www.azul.com/products/zulu-enterprise/[Azul Zulu], 
+//  https://github.com/SAP/SapMachine[SAP], 
+//  https://www.ibm.com/marketplace/support-for-runtimes[IBM], 
+//  https://bell-sw.com/java.html[BellSoft], 
+//  https://www.jclarity.com/[jClarity], Distributionen, …
+// --
+
+[.refs]
+--
+* https://blogs.oracle.com/java-platform-group/oracle-jdk-releases-for-java-11-and-later[Oracle Blog: Oracle JDK Releases for Java 11 and Later], 
+* https://medium.com/@javachampions/java-is-still-free-2-0-0-6b9aa8d6d244[Java is Still Free 2.0.3]
+--
+
+[.notes]
+--
+* Oracle veröffentlich selbst unter zwei Lizenzen: GPLv2+CPE und commercial licence
+* Providers are IBM, Amazon, Alibaba, Azul, SAP, many more – listed in references
+--
+
+
+
+[.bonuscontent]
+[.lightbg.degrade,background-video="videos/flowers.mp4",background-video-loop="true",background-opacity="0.6"]
+//[transition="zoom-out"]
+=== OpenJDK Suppliers
+//=== Love, peace & happiness…
+//.OpenJDK Suppliers
+* https://adoptopenjdk.net/[AdoptOpenJDK] [decent]#(LTS: 4yr, 1yr overlap)#
+* https://access.redhat.com/articles/1299013[Red Hat (IBM)] [decent]#(v8: 2023 v11: 2024)#
+* https://aws.amazon.com/corretto/[Amazon Corretto], 
+ https://github.com/alibaba/dragonwell8[Alibaba], 
+ https://www.azul.com/products/zulu-enterprise/[Azul Zulu], 
+ https://github.com/SAP/SapMachine[SAP], 
+ https://www.ibm.com/marketplace/support-for-runtimes[IBM], 
+ https://bell-sw.com/java.html[BellSoft], 
+ https://www.jclarity.com/[jClarity], Distributionen, …
+
+
+
+
+[background-video="videos/flowers.mp4",background-video-loop="true",background-opacity="0.6"]
+[.degrade,transition="zoom-in convex-out"]
+=== `tl;dr`: AdoptOpenJDK
+image:adopt-openjdk-entry.png[AdoptOpenJDK,width=950] +
+[.decent.x-small]#LTS Support for Java 8 (2023) & 11 (2022) & ff.#
+[.notes]
+--
+* `tl;dr` – pick AdoptOpenJDK
+--
+
+[background-video="videos/flowers.mp4",background-video-loop="true",background-opacity="0.6"]
+[.degrade,transition="convex-in"]
+=== AdoptOpenJDK – Sponsors
+image::adopt-openjdk-sponsors.png[AdoptOpenJDK Sponsors]
+[.notes]
+--
+* AdoptOpenJDK backed by Amazon, Azul, GoDaddy, IBM, jClarity, Pivotal, Red Hat, … 
+--
+
+
+[background-video="videos/flowers.mp4",background-video-loop="true",background-opacity="0.6"]
+[.degrade,transition="convex-in convex-out"]
+=== AdoptOpenJDK – Plattforms
+image::adopt-openjdk-plattforms.png[AdoptOpenJDK Plattforms]
+[.notes]
+--
+* New since Java 9: ARM & s/390 – so if you have a mainframe in the basement… or an raspberry pi… You know what to do!
+--
+
+
+[.bonuscontent]
+[background-video="videos/flowers.mp4",background-video-loop="true",background-opacity="0.6"]
+[.degrade,transition="convex-in convex-out"]
+=== AdoptOpenJDK – Support Timelines
+image::adopt-openjdk-support.png[AdoptOpenJDK Support Table]
+[.notes]
+--
+* OpenJDK 8 supported: 2023, OpenJDK 11: 2025
+--

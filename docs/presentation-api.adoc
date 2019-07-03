@@ -1,0 +1,499 @@
+[.lightbg,background-video="videos/keyboard.mp4",background-video-loop="true",background-opacity="0.7"]
+== API
+
+
+=== Immutable Collection Factories [jep]#https://openjdk.java.net/jeps/269[JEP 269]#
+[source,java]
+.`List/Set/Map.of()`
+----
+/* Comment sections would break ... */
+List<Integer> listOfNumbers     = List.of(1, 2, 3, 4, 5/*, null*/);
+
+Set<Integer> setOfNumbers       = Set.of(1, 2, 3, 4, 5/*, 1*/);
+
+Map<String, String> mapOfString = Map.of("key1", "value1", "key2", "value2");
+
+Map<String, String> moreMaps    = Map.ofEntries(
+        Map.entry("key1", "value1"),
+        Map.entry("key2", "value2")/*,
+        Map.entry("key1", "value3")*/
+);
+----
+[decent]
+--
+Produces _immutable_ collections. All methods _fail on `null` values._  +
+`Set.of()` and `Map.of()` break on _duplicate_ (key) entries.
+--
+[.notes]
+--
+* Long overdue. Sth. I always did on my own in nearly every project.
+--
+
+
+=== Immutable collection copy
+[source,java]
+.`List/Set/Map.copyOf()`
+----
+var listCopy = List.copyOf(originalList);  // independent, immutable copy
+var setCopy  =  Set.copyOf(originalList);  // copy to other types
+var mapCopy  =  Map.copyOf( … );
+
+assert 3 == listCopy.size();  // ["a", "b", "a"]
+assert 2 == setCopy.size();   // ["a", "b"]
+
+// listCopy.add("z")          // → UnsupportedOperationException
+----
+[.tgap.small]
+--
+[decent]#_Real copies_ – independent from source vs. `Collections.unmodifiable()`#
+--
+
+
+
+=== Files & I/O
+[source,java]
+----
+var txtPath = Path.of("src", "test", "resources", "sample.txt");         <1>
+Path newPath = Path.of("src/test/resources/newfile.txt");
+
+String fileContent = Files.readString(txtPath);                          <2>
+// → "Nostrum iure ullam."
+
+Files.writeString(newPath, "Nostrum lore.", StandardOpenOption.CREATE);  <3> 
+
+long firstMismatch = Files.mismatch(txtPath, newPath); // → 8  | JDK12   <4>
+----
+<1> Directly create `Path`-instances
+<2> Hassle-free reading a file content into a string
+<3> …or writing into files
+<4> Find position of first mismatching bytes of two Files [.version]#12#
+
+[.notes]
+--
+* Hassle-free reading a file content into a string or writing into files
+* Find position of first mismatching bytes of two Files [.version]#12#
+--
+
+
+
+[.bonuscontent]
+=== Stream Enhancements
+1. *Transform* with `dropWhile()` & `takeWhile()`
+2. *Generate* with `iterate()` & `ofNullable()`)
+3. *Redirect* with `transferTo()`
+4. Collect *to immutables* with `toUnmodifiableList()`, 
+5. … or *invert* filters with `Predicate.not()`
+
+
+=== Transform & Generate Streams
+[.fragment]
+--
+[source,java]
+.Modify with `dropWhile()` & `takeWhile()`
+----
+var stream = Stream.of(-1, 0, 1, 21, 42);
+
+stream.dropWhile(i -> i < 2)     // → [ 21, 42   ]
+stream.takeWhile(i -> i < 2)     // → [ -1, 0, 1 ]
+----
+// byte[] b = new ByteArrayInputStream(buf) 
+//     .readAllBytes();           // Read all InputStream bytes in one shot
+--
+
+[.fragment]
+--
+[source,java]
+.Redirect with `transferTo()`
+----
+new ByteArrayInputStream(buf)
+        .transferTo(System.out);    // InputStream → OutputStream
+----
+--
+
+[.fragment]
+--
+.Generate with `iterate()` & `ofNullable()`
+[source,java]
+----
+// Stream<T> iterate​(seedValue, nextTest, applyFunc)
+Stream.iterate(2, i -> i < 999,  i -> i*i);     // → [2, 4, 16, 256]
+
+Stream.ofNullable(null);                        // [ ]
+Stream.ofNullable("Hi");                        // [ "Hi" ]
+----
+--
+
+[.notes]
+--
+1. Werte anhand eines Filters überspringen oder begrenzen
+2. Streams umleiten
+3. Iterate-Stream oder Stream mit 0 oder 1 Element
+--
+
+
+
+[.left]
+=== Collectors
+
+.Dispatch a stream to two consuming Collectors with `teeing()`
+[source,java]
+----
+double rms(Stream<Integer> numStream) {
+    return rms = numStream.collect(
+            Collectors.teeing(                  
+                    Collectors.summingDouble(i -> i * i),   // → sum
+                    Collectors.counting(),                  // → n
+                    (sum, n) -> Math.sqrt(sum / n) // Join into final result 
+            )
+    );
+}
+----
+
+[.tgap.fragment.small]
+--
+.More new `Collectors` goodness…
+* Create immutable Stream copies with `toUnmodifiableList/set/Map()`
+* unpack nested values using `flatMap()`
+* filter out unwanted values using `filtering()`
+--
+
+
+
+[%notitle]
+=== `Predicate:not()`
+.`Predicate::not`
+[source,java]
+----
+stream.filter(s -> !s.isEmpty) 
+----
+[.fragment]
+--
+.icon:angle-double-down[]
+[source,java]
+----
+stream.filter(Predicate.not(String::isEmpty)) 
+----
+--
+[.fragment]
+--
+.icon:angle-double-down[]
+[source,java]
+----
+stream.filter(not(String::isEmpty)) 
+----
+--
+
+
+=== Enhanced `Optional`
+.New `ifPresentOrElse()`, `or()`, `stream()` and `isPresent()`
+[source, java]
+----
+var maybeInt = Optional.ofNullable( (Math.random()<0.5) ? 42 : null );
+
+maybeInt.ifPresentOrElse(                       // … do either this or that
+        (n) -> System.out.println(n),
+        () -> System.out.println("Nada")   );
+----
+[.source.fragment, java]
+----
+// Optional empty? → Build a new one on-the-fly…
+var triedAgain = maybeInt.or( () -> Optional.of(-1) );
+----
+[.source.fragment, java]
+----
+// Provide a stream → [] or [42]
+Stream<Integer> intStream = maybeInt.stream();
+----
+// [.source.fragment, java]
+// ----
+// // … or just throw a `NoSuchElementException`
+// int answer = maybeInt.orElseThrow();
+// ----
+[.source.fragment, java]
+----
+// Yay! – complements isPresent()
+assert maybeInt.isPresent() == !maybeInt.isEmpty();
+----
+
+
+=== New `ProcessHandle` and `ProcessBuilder`
+
+[source,java]
+----
+Process sleeper = new ProcessBuilder("sleep", "10s").start();
+ProcessHandle sleepHandle = sleeper.toHandle();
+
+// Perform Runnables on process exit
+sleepHandle.onExit().thenRun(                       // → CompletableFuture
+        () -> out.println("`sleep` process exited")  );
+
+out.println(sleepHandle.info());
+// → [user: ben, cmd: /bin/sleep, args: [10s], startTime:…, totalTime: …]
+
+// Find …
+ProcessHandle jvm = ProcessHandle.current();              // … JVM,
+Stream<ProcessHandle> all = ProcessHandle.allProcesses(); // … all processes
+jvm.children().forEach(out::println);                     // … or childs
+
+// Kill …
+sleepHandle.destroy();                                    
+----
+
+[.notes]
+--
+* much more convenient
+* provides *more info* and *more control* 
+* aid the creation of process pipelines
+--
+
+[.left]
+=== Enhanced Deprecation policy
+
+.`@Deprecated` now wears a `forRemoval` flag
+[source,java]
+----
+@Deprecated(since="1.2", forRemoval=true)
+public final synchronized void stop(Throwable obj) {
+    throw new UnsupportedOperationException();
+}
+----
+
+[.tgap.fragment]
+--
+.`jdeprscan`: Scan Jars for deprecated usages
+[.x-small]
+----
+$ jdeprscan commons-math3-3.6.1.jar
+Jar file commons-math3-3.6.1.jar:
+class org/apache/commons/math3/fraction/BigFraction uses deprecated method java/math/BigDecimal::divide(Ljava/math/BigDecimal;II)…; 
+class org/apache/commons/math3/util/MathUtils uses deprecated method java/lang/Double::<init>(D)V 
+class org/apache/commons/math3/util/Precision uses deprecated method java/math/BigDecimal::setScale(II)Ljava/math/BigDecimal; 
+----
+[.verydecent]#can filter for deprecated methods marked for removal#
+--
+
+
+
+
+[.bonuscontent]
+=== StackWalker
+
+[source,java]
+----
+StackWalker.getInstance().walk(s ->
+        s.map( frame -> frame.getClassName()+ '/' +frame.getMethodName() )
+                .filter(name -> name.startsWith("de.bentolor"))
+                .limit(10)
+                .collect(Collectors.toList())
+).forEach(out::println);
+----
+
+
+
+=== HTTP/2 Client [jep]#https://openjdk.java.net/jeps/110[JEP 110]# [jep]#https://openjdk.java.net/jeps/321[JEP 321]#
+
+[source,java]
+----
+HttpClient client = HttpClient.newBuilder()                              <1>
+            .version(HttpClient.Version.HTTP_2)                          <2>
+            .connectTimeout(Duration.ofSeconds(3)).build();                                                    
+
+URI uri = URI.create("https://www.exxcellent.de/");
+HttpRequest req = HttpRequest.newBuilder(uri)
+        .header("Useragent", "MyDemo").GET().build();
+
+var future = client.sendAsync(req, HttpResponse.BodyHandlers.ofString()) <3>
+        .thenApply(HttpResponse::body)
+        .thenAccept(System.out::println);
+
+var expensiveOperation = Math.pow(12345, 9876);  // meanwhile do sth. else…
+future.get();              // wait for completion of the background request
+----
+<1> *Fluent API* and *Builder Pattern*
+<2> *Standardized HTTP client* capable of *HTTP/2* and *WebSocket* connections! 
+<3> Start *asynchronously* HTTP requests in the background
+
+[.notes]
+--
+* Standardized HTTP client capable of WebSocket connections! 
+** Java 8 UrlConnection too abstract
+** New client: Fluent API
+* Support for asynchronous requests!
+* Support for Proxying, Cookies, Authentication
+--
+
+[.bonuscontent]
+=== WebSocket client
+
+[source,java]
+----
+var wsBuilder = HttpClient.newHttpClient().newWebSocketBuilder();
+var wsFuture = wsBuilder.buildAsync(URI.create("wss://echo.websocket.org"),
+
+        new WebSocket.Listener() {
+            onOpen(webSocket) { …  }
+            onText(webSocket, data, last) { … }
+            onBinary(webSocket, data,last) { … }
+            onPing(webSocket, message) { … }
+            onPong(webSocket, message) { … }
+            onClose(webSocket, statusCode, reason) { … }
+            onError(webSocket, error) { …  }
+        });
+
+WebSocket websocket = wsFuture.join();
+websocket.sendText("Ping!", true);
+websocket.sendClose(NORMAL_CLOSURE, "Goodbye!").join();
+----
+
+
+// [.bonuscontent]
+// === Reflection Access
+//
+// .Concurrent `VarHandle`
+// VarHandle API to replace the field and array related operations of java.util.concurrent.atomic and sun.misc.Unsafe in order to and provide low-level access mechamisms, e.g. atomic write.
+//
+// https://openjdk.java.net/jeps/193
+// https://docs.oracle.com/en/java/javase/12/docs/api/java.base/java/lang/invoke/VarHandle.html
+//
+// .MethodHandles
+// https://openjdk.java.net/jeps/274
+// Enhance the MethodHandle, MethodHandles, and MethodHandles.Lookup classes of the java.lang.invoke package to ease common use cases and enable better compiler optimizations by means of new MethodHandle combinators and lookup refinement.
+
+
+=== Reactive Streams
+
+`java.util.concurrent.Flow`
+
+JDK Standard of https://www.reactive-streams.org +
+for *asynchronous stream processing* +
+with *non-blocking backpressure*
+
+[.refs]
+--
+* https://github.com/reactive-streams/reactive-streams-jvm/blob/v1.0.2/README.md[Reactive Streams JVM Speciifcation]
+--
+
+[.notes]
+--
+The main goal of Reactive Streams is to govern the exchange of stream data across an asynchronous boundary – think passing elements on to another thread or thread-pool — while ensuring that the receiving side is not forced to buffer arbitrary amounts of data. 
+--
+
+
+=== Deprecation of `finalize()`
+
+.Motivation
+> Finalizers are inherently problematic and their use can lead to performance 
+> issues, deadlocks, hangs, and other problematic behavior. 
+
+[.pc70.left.fragment]
+--
+No `forRemoval=true` yet -- probably for long!
+--
+[.pc70.left.tgap.decent.fragment.x-small]
+--
+New way: Register `Cleaner` services for your objects. +
+They will receive `PhantomReference` to objects which are no longer reachable.
+--
+
+[.refs]
+--
+* https://bugs.openjdk.java.net/browse/JDK-8165641[JDK-8165641 Deprecate Object.finalize]
+* https://stuartmarks.wordpress.com/2017/04/17/deprecation-of-object-finalize/[Deprecation of Object.finalize()]
+--
+
+[.notes]
+--
+* Problem: Calling `finalize()` on an object allows it “resurrection” → GC problem
+* are `notforremoval` and probably for long. Port all JDK and then wait for important lcients to follow
+
+--
+
+
+// === Arrays.mismatch
+
+
+[.bonuscontent]
+=== String enhancements
+
+.Java 11: Adopting new `Character.isWhitespace()` 
+[source,java]
+----
+" \tword\u0019 \r".trim()          // → "word";      (Java 8)
+
+// New methods based on `Character.isWhitespace(char)` 
+" \tword\u0019 \r".strip()         // → "word\u0019"  
+" \tword\u0019 \r".stripLeading()  // → "word\u0019 \r"
+" \tword\u0019 \r".stripTrailing() // → " \tword\u0019"
+" \t".isBlank()                    // → true
+----
+
+.Java 12 utilities [version]#12#
+[source,java]
+----
+"hi\r\n  you!".indent(2)   // →  "  hi\n    you!\n");
+"hi\r\n  you!".indent(-1)  // →  "hi\n you!\n");
+
+Stream<String> l = "1\n2\n3\n!".lines();
+IntStream stream = "word".chars();
+
+"ABC".transform(String::toLowerCase), "abc");
+----
+
+[.notes]
+--
+* Indents: Obviously eat-your-own-dogfood Preparation to Text Block. More in 13
+--
+
+
+
+
+[.small]
+[.lightbg,background-video="videos/api-diff-scroll.mp4",background-opacity="0.6"]
+=== icon:tags[] JDK API Changes
+
+link:https://github.com/marchof/java-almanac[JDK API Changes Java Almanac]
+
+// Matrix
+// ggf. background video
+
+// [.x-small%autowidth,cols=",,,,,,",options="header"]
+// |===
+// |from |to |to |to |to |to |to
+// |*Java 8* |http://download.eclipselab.org/jdkdiff/V8/V9/index.html[Java
+// 9] |http://download.eclipselab.org/jdkdiff/V8/V10/index.html[Java 10]
+// |http://download.eclipselab.org/jdkdiff/V8/V11/index.html[Java 11]
+// |http://download.eclipselab.org/jdkdiff/V8/V12/index.html[Java 12]
+// |http://download.eclipselab.org/jdkdiff/V8/V13/index.html[Java 13]
+// |http://download.eclipselab.org/jdkdiff/V8/V14/index.html[Java 14]
+
+// |*Java 9* |
+// |http://download.eclipselab.org/jdkdiff/V9/V10/index.html[Java 10]
+// |http://download.eclipselab.org/jdkdiff/V9/V11/index.html[Java 11]
+// |http://download.eclipselab.org/jdkdiff/V9/V12/index.html[Java 12]
+// |http://download.eclipselab.org/jdkdiff/V9/V13/index.html[Java 13]
+// |http://download.eclipselab.org/jdkdiff/V9/V14/index.html[Java 14]
+
+// |*Java 10* | |
+// |http://download.eclipselab.org/jdkdiff/V10/V11/index.html[Java 11]
+// |http://download.eclipselab.org/jdkdiff/V10/V12/index.html[Java 12]
+// |http://download.eclipselab.org/jdkdiff/V10/V13/index.html[Java 13]
+// |http://download.eclipselab.org/jdkdiff/V10/V14/index.html[Java 14]
+
+// |*Java 11* | | |
+// |http://download.eclipselab.org/jdkdiff/V11/V12/index.html[Java 12]
+// |http://download.eclipselab.org/jdkdiff/V11/V13/index.html[Java 13]
+// |http://download.eclipselab.org/jdkdiff/V11/V14/index.html[Java 14]
+
+// |*Java 12* | | | |
+// |http://download.eclipselab.org/jdkdiff/V12/V13/index.html[Java 13]
+// |http://download.eclipselab.org/jdkdiff/V12/V14/index.html[Java 14]
+
+// |*Java 13* | | | | |
+// |http://download.eclipselab.org/jdkdiff/V13/V14/index.html[Java 14]
+// |===
+
+[.refs]
+--
+* Source: https://github.com/marchof/java-almanac[Java Almanac (Marc R. Hoffmann)]
+* link:https://github.com/AdoptOpenJDK/jdk-api-diff[Event more detailed API comparison]
+--

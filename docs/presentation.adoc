@@ -1,0 +1,73 @@
+= Power Catch-up: Everything Practical and Important in Java 9 to 13
+:author: Benjamin Schmid @bentolor <benjamin.schmid@exxcellent.de>
+:date: 2019-07-04
+:icons: font
+// we want local served fonts. Therefore patched sky.css
+//:revealjs_theme: sky
+:revealjs_customtheme: css/sky.css
+:revealjs_autoSlide: 0
+:revealjs_history: true
+:revealjs_fragmentInURL: true
+:revealjs_viewDistance: 5
+:revealjs_width: 1408
+:revealjs_height: 792
+:revealjs_controls: false
+:revealjs_controlsLayout: edges
+:revealjs_slideNumber: c/t
+:revealjs_showSlideNumber: speaker
+:revealjs_autoPlayMedia: true
+:revealjs_defaultTiming: 42
+//:revealjs_transitionSpeed: fast
+:revealjs_parallaxBackgroundImage: images/background-landscape-light-orange.jpg
+:revealjs_parallaxBackgroundSize: 4936px 2092px
+:customcss: css/presentation.css
+:imagesdir: images
+:source-highlighter: highlightjs
+:highlightjs-theme: css/atom-one-light.css
+// we want local served font-awesome fonts
+:iconfont-remote!:
+:iconfont-name: fonts/fontawesome/css/all
+
+[.notes]
+--
+* Zur Person: Technology Advisor bei der eXXcellent solutions: IT Dienstleister mit Standorten in Ulm, München, Stuttgart, Darmstadt, Berlin: Individuelle Softwarelösungen – vorrangig Java & Web; auch .NET/Mobile/SAP. Klassisch.
+* Bin seit 18+ Jahren führend & beratend im  Projektgeschäft unterwegs. 
+  Stets in der Rolle technische Innovationen den Projekte & Kollegen näher zu bringen. 
+* Lange Jahre war das im Java-Umfeld eher entspannter. Innovationen eher im Umfeld Docker/Kubernetes und auf der JVM eher Kotlin wo ich ebenfalls großer Fan bin. 
+* Hat sich aber kräfitg geändert. Auch bei Java hat in letzter Zeit mehr Forwärtsbewegung eingesetzt und es gilt als auch im Kernsprache selbst wieder mehr „am Ball“ zu bleiben. 
+--
+
+include::presentation-intro.adoc[] 
+
+include::presentation-agenda.adoc[] 
+
+include::presentation-highlights.adoc[] 
+
+include::presentation-language.adoc[] 
+
+include::presentation-api.adoc[] 
+
+include::presentation-tooling.adoc[]
+
+include::presentation-outlook.adoc[]
+
+include::presentation-appendix.adoc[]
+
+
+[pass]
+++++
+<script src="./live.js"></script>
+
+<!-- hide "verbatim" sections if URL contains "terse"-Keyword -->
+<script>
+    if (!window.location.search.match(/bonus/gi)) {
+        var sections = document.getElementsByTagName('section');
+        for (var i = sections.length-1; i > -1; --i) {
+            console.log(sections[i].classList);
+            if (sections[i].classList.contains("bonuscontent")) {
+                sections[i].remove();
+            }
+        }
+    }
+</script>
+++++

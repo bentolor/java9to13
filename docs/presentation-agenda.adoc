@@ -1,0 +1,18 @@
+[.lightbg,background-video="videos/relaxing.mp4",background-video-loop="true",background-opacity="0.7"]
+== Agenda
+
+1. Java 9--13 Overview
+2. Language
+3. API
+4. Tooling
+5. Java 14 & beyond
+
+{nbsp} +
+[.decent]#icon:hand-point-right[] v12+ & Preview Features:# [version]#12# [version]#13# [preview]#preview#
+
+[.notes]
+--
+While you lean back and take a beer, I'll …
+
+* Note: I'll emphasize features newer than 11
+--

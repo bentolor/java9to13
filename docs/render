@@ -1,0 +1,22 @@
+#!/bin/sh
+#
+# Inital Setup see:
+#    https://asciidoctor.org/docs/asciidoctor-revealjs/
+
+SRCFILE=presentation.adoc
+SRCFILE=presentation.adoc
+
+echo "Rendering presentation.adoc"
+bundle exec asciidoctor-revealjs $SRCFILE
+
+echo "Starting Webserver on :8000"
+python -m SimpleHTTPServer >/dev/null 2>&1 & 
+
+chromium-browser http://localhost:8000/presentation.html > /dev/null &
+
+echo "Watching *.adoc for changes"
+inotifywait -m -e close_write *.adoc |
+while read events; do
+  echo $events
+  bundle exec asciidoctor-revealjs $SRCFILE
+done

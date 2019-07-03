@@ -1,0 +1,286 @@
+[.lightbg,background-video="videos/hammer.mp4",background-video-loop="true",background-opacity="0.7"]
+== Tooling
+
+[%notitle,background-video="videos/jshell-demo.mp4",background-size="contain"]
+=== REPLS: `jshell` [jep]#https://openjdk.java.net/jeps/222[JEP 222]#
+
+
+=== REPLS: `jshell` [jep]#https://openjdk.java.net/jeps/222[JEP 222]#
+
+[.small.col2]
+----
+$ jshell
+|  Welcome to JShell -- Version 13-ea
+|  For an introduction type: /help intro
+
+jshell> "HI"
+$1 ==> "HI"
+
+jshell> var hi = $1.to
+toCharArray()   toLowerCase(    toString()      toUpperCase(    
+jshell> var hi = $1.toLowerCase()
+hi ==> "hi"
+
+jshell> String twice(String s) {
+   ...>    return s + s;
+   ...> }
+|  created method twice(String)
+
+jshell> var hihi = twice(hi)
+hihi ==> "hihi"
+
+jshell> /vars 
+|    String $1 = "HI"
+----
+
+[.small.col2]
+----
+|    String hi = "hi"
+|    String hihi = "hihi"
+
+jshell> /methods
+|    String twice(String)
+
+jshell> /edit twice
+|  modified method twice(String)
+
+jshell> /list
+
+   1 : "HI"
+   2 : var hi = $1.toLowerCase();
+   4 : var hihi = twice(hi);
+   5 : String twice(String s) {
+          return "Double Time: "+ s + s;
+       }
+
+jshell> /4
+var hihi = twice(hi);
+hihi ==> "Double Time: hihi"
+
+jshell> /save twice twice.jsh
+----
+
+//Get an overview with `/help`.
+
+[.refs]
+--
+* https://docs.oracle.com/javase/10/jshell/introduction-jshell.htm[Java Shell User’s Guide]
+* https://www.pluralsight.com/guides/getting-started-with-jshell-part-2[Getting Started with JShell Part 2 & 3]
+--
+
+
+
+=== Single Source File Launch [jep]#https://openjdk.java.net/jeps/330[JEP 330]#
+
+.Directly execute Java source in File `hello` (no `.java`-Suffix!)
+[source, java]
+----
+#!/usr/bin/java --source 11
+
+public class SingleClassJava {
+    public static void main(String[] args) {
+        System.out.println("Hello " + args[0] + ". Executable .java – Yay!");
+    }
+}
+----
+
+[.fragment]
+--
+[source,bash]
+----
+$ chmod +x hello
+$ ./hello world
+Hello world. Executable .java – Yay!
+----
+--
+
+[.fragment]
+--
+[.x-small.decent]#or launch any single-class Java file:#
+[source,bash]
+----
+$ java SingleClassJava.java world
+----
+--
+
+
+[.left]
+=== JVM Logging & Log rerouting
+
+.Fine-grained, easy-to-configure JVM Logging [jep]#https://openjdk.java.net/jeps/158[JEP 158]# [jep]#https://openjdk.java.net/jeps/271[JEP 271]#
+
+[.small]
+----
+$ java -Xlog:os="debug,gc*=debug:stdout:pid,level,tags" SingleClassJava.java
+
+[30911][debug][os] Initial active processor count set to 4
+[30911][info ][os] Use of CLOCK_MONOTONIC is supported
+[30911][debug][gc,ergo,heap  ] Attempt heap expansion (allocate archive regions). Total size: …
+[30911][info ][gc,cds        ] Mark closed archive regions in map: [0x00000007bff00000, … ]
+----
+
+[.tgap.fragment]
+--
+.JVM Log rerouting [jep]#https://openjdk.java.net/jeps/264[JEP 264]#
+Allows applications to provide *custom logger* implementations + 
+to be *used by platform* classes.
+--
+
+[.refs]
+--
+* https://grokonez.com/java/java-9/java-9-platform-logging-and-service[Java 9 Platform Logging API and Service]
+* https://grokonez.com/java/java-9/java-9-unified-jvm-logging[Java 9 Unified JVM Logging]
+--
+
+
+
+
+=== Flight Recorder [jep]#https://openjdk.java.net/jeps/328[JEP 328]#
+
+image:java-mission-control-center.png[Java Mission Control, 800, float="right"]
+
+* icon:cogs[] **Production**- +
+  Profiling & Monitoring 
+* Former Oracle payware  +
+  Open-sourced with Java 11
+* _Flight recording_ start +
+  on new & running `java`
+* Rules → Alerts
+
+[.notes]
+--
+*  low-overhead  !
+* previously a commercial addition to the JVM, now open-sourced, part of Java 11
+* `java -XX:StartFlightRecording=settings=default nl.craftsmen.java11demo.MyClass`
+--
+
+[.refs]
+--
+* http://jdk.java.net/jmc/
+--
+
+=== Microbenchmark Suite [jep]#https://openjdk.java.net/jeps/230[JEP 230]# [version]#12#
+
+[.col3-lc]
+--
+[.small.source,java]
+----
+@BenchmarkMode(Mode.AverageTime)
+@OutputTimeUnit(TimeUnit.MICROSECONDS)
+@State(Scope.Thread)
+public class BenchmarkIntegers {
+    @Param("500")
+    private int size;
+    private String[] strings;
+
+    @Setup
+    public void setup() {
+        Random r = new Random(0);
+        strings = new String[size];
+        for (int i = 0; i < size; i++) {
+            strings[i] = "" + (r.nextInt(10000) - 5000);
+        }
+    }
+
+    @Benchmark
+    public void parseInt(Blackhole bh) {
+        for (String s : strings) {
+            bh.consume(Integer.parseInt(s));
+        }
+    }
+}
+----
+--
+
+[.col3-r.small]
+--
+* Based on `jmh`
+* Avoids JIT Falltrips
+* Start via Maven Archteype 
+--
+
+[.notes]
+--
+* Microbenchmarking: Falltrip JIT Compiler
+--
+
+
+
+//=== Linting & Warnings
+//* `-Xdoclint/package:java.*,javax.*`
+//TODO:: many more
+
+
+[.left]
+=== `jlink` / `jdeps` [jep]#https://openjdk.java.net/jeps/282[JEP 282]# [jep]#https://openjdk.java.net/jeps/220[JEP 220]# [jep]#https://openjdk.java.net/jeps/275[JEP 275]# [jep]#https://openjdk.java.net/jeps/200[JEP 200]# [jep]#https://openjdk.java.net/jeps/201[JEP 201]# [jep]#https://openjdk.java.net/jeps/260[JEP 260]#
+
+// Biepsiel-Demos was da rauskommt ???
+
+> **Most interesting Part of Java 9 / Jigsaw!** 
+
+[.tgap]
+.Minimize size with `jlink` Linker
+[x-small]#Build optimized, slim run-time image for modular Java application with minimal JRE#
+
+.List package dependencies with `jdeps`
+[x-small]#`jdeps app.jar`#
+
+[.fragment]
+--
+.+ better Container-Awareness
+[x-small]#Support of *Docker* CPU and memory limits.#
+// * `jlink` → produce minimal JREs
+--
+
+[.refs]
+--
+* http://cr.openjdk.java.net/~mr/jigsaw/ea/module-summary.html[JVM Module Summary]
+* http://openjdk.java.net/projects/jigsaw/spec/sotms/[The State of the Module System]
+* https://docs.oracle.com/en/java/javase/12/tools/jdeps.html[jdeps Manual]
+* https://bugs.openjdk.java.net/browse/JDK-8146115[JDK-8146115[Improve docker container detection]
+--
+
+[.notes]
+--
+* Java 8 is not aware of being executed in a Docker container: Misinterpretation of available CPU / Memory can cause excessive CPU context switches, Thread contention, Memory overcomitting 
+--
+
+[.left]
+=== Packaging
+
+.icon:book-dead[] Cross compilation with `javac --release N` [jep]#https://openjdk.java.net/jeps/247[JEP 247]#
+
+Conveniently compile for older Java with `--release` +
+[decent]#Replaces: `javac -source N -target N –bootclasspath rtN.jar`#
+
+[.tgap.fragment]
+--
+.icon:cube[] Packaging: Multi-release JAR [jep]#https://openjdk.java.net/jeps/238[JEP 238]#
+JAR Files can now contain multiple, version-specific versions classes
+--
+
+
+[.bonuscontent]
+=== HTML5 Javadoc [jep]#https://openjdk.java.net/jeps/221[JEP 221]# [jep]#https://openjdk.java.net/jeps/224[JEP 224]# [jep]#https://openjdk.java.net/jeps/225[JEP 225]#  
+
+
+- Enable via `-html5` parameter
+- Search box for easy navigation
+- HTML5 output; no more frames
+- Improved DocLint: `-Xdoclint/package:java.*,javax.*`
+
+
+[.bonuscontent]
+=== Performance
+
+.Compact Strings [jep]#https://openjdk.java.net/jeps/254[JEP 254]#
+* Use ISO-8869-1 (1 byte/character) when possible
+
+.Garbage Collector G1 [jep]#https://openjdk.java.net/jeps/248[JEP 248]# [jep]#https://openjdk.java.net/jeps/307[JEP 307]# 
+* Now default GC
+* Multi-threaded Full GCs
+* Minimzes Stop-the-world Pauses
+* Deduplicates String
+
+.Epsilon GC
+* No-Op Garbage Collector (short-living JVMs)

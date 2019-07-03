@@ -1,0 +1,143 @@
+[.lightbg,background-video="videos/prediction.mp4",background-video-loop="true",background-opacity="1"]
+== Java 14 & beyond 
+
+//[%notitle,background-image="graalvm-architecture.png"]
+=== Project Metropolis
+image::graalvm-architecture.png[GraalVM ecosystem]
+
+[.notes]
+--
+* Polyglot VM: Execute multiple language with zero overhead
+* Can run in multiple environments; Can produce native images
+* Zero-overhead interop
+--
+
+=== GraalVM -- Polyglot VM [jep]#https://openjdk.java.net/jeps/243[JEP 243]# [jep]#https://openjdk.java.net/jeps/246[JEP 246]# [jep]#https://openjdk.java.net/jeps/295[JEP 295]#
+
+[.col2]
+--
+* *Ahead-of time compiler* (AoT)
+* Generic VM +
+ for *different languages* +
+→ _JVM_ (Java, Kotlin, Scala, …) +
+→ _LLVM_ (C, C++) → native +
+→ _Java_ Script, Python, Ruby, R
+--
+
+[.col2]
+--
+* Shared Runtime → Zero overhead for language interop
+
+* *Native executables* +
+  (GraalVM on SubstrateVM) +
+  → Much smaller startup & memory
+--
+
+[.clear.decent]
+--
+.AoT can be used today:
+[.x-small]#`java -XX:+UnlockExperimentalVMOptions -XX:+EnableJVMCI -XX:+UseJVMCICompiler`#
+--
+
+[.notes]
+--
+* Multiple parts:
+** AoT Compiler
+** Graal VM / Substrate VM as runtime
+* AoT → improved startup time vs. JIT
+* Limitations: Dynamic (Reflection); highly experimental
+* AoT Compile can be used today
+--
+
+=== Simplyfing Syntax: Amber
+
+.Pattern matching for `instanceof` [jep]#https://openjdk.java.net/jeps/305[JEP 305]#
+[source,java]
+----
+if (obj instanceof String s) {
+    return s.contains("abc")
+} 
+----
+
+.Unamed lamda parameters [jep]#https://openjdk.java.net/jeps/302[JEP 302]#
+[source,java]
+----
+(i, _) -> String.valueOf(i);
+----
+
+.Data Classes & Sealed Types
+[source,java]
+----
+record Point(int x, int y) { }
+----
+
+[.refs]
+--
+* https://openjdk.java.net/projects/amber/[OpenJDK Project Amber]
+* https://cr.openjdk.java.net/~briangoetz/amber/datum.html[Data Classes and Sealed Types for Java]
+--
+
+=== Value Types: Valhalla
+
+> JVM infrastructure for working with *immutable* and *reference-free* objects, 
+> for efficient by-value computation with non-primitive types.
+
+[.tgap]
+--
+.Value Object: Immutable & Final 
+[source,java]
+----
+value class Rectangle { int width,height; }
+----
+--
+
+[.decent.tgap.small]
+--
+_t(L1(/L2 Cache)_ << _t(RAM)_: → Similar performance to primitives +
+Benefits of immutables: Functional-style computations, shareability, …
+--
+
+[.refs]
+--
+* https://openjdk.java.net/projects/valhalla/[OpenJDK Valhalla]
+--
+
+
+[%notitle]
+=== Loom: Fibers & Continuations
+image:loom_banner1.png[Loom: Fibers & Continuations]
+
+[.col3-l]
+--
+.Lightweight concurrency
+* Continuations
+* Fibers (JVM „threads“)
+* Tail-call elimination
+--
+
+[.col3-cr]
+--
+[.source.small,java]
+----
+Continuation cont = new Continuation(SCOPE, () -> {
+    while (true) {
+        System.out.println("before");
+        Continuation.yield(SCOPE);
+        System.out.println("after");    
+    }
+});
+
+while (!cont.isDone()) {
+    cont.run();
+}
+----
+
+[.decent.xx-small]#Similar to cooperative multitasking or Kotlin's Coroutines…#
+--
+
+[.notes]
+--
+* User-mode "threads": No real theads & overhead
+* Continuations / Cooperative Multitasking: Tasks indicate when they want togive up control
+* Easily scales to 100.000 of parallel tasks
+--

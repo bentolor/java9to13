@@ -1,0 +1,89 @@
+[.lightbg,background-video="videos/coffee-beans.mp4",background-video-loop="true",background-opacity="0.7"]
+== Java 9--13 in a nutshell
+
+=== v9 (huge…)
+
+* *Java module (Jigsaw)*
+* *API Improvements:* _Project Coin Milling_, Stream, … 
+* *Unified JVM & Java Logging*, …
+//  Reflection, Date, Concurrency, …
+// * _Deprecated:_ `finalize()` 
+* *Performance*
+* _Tools:_ `jshell` `jlink` `-release`, Multi-Release JARs
+//* _New platforms:_ *AArch64, s390x, Arm32/Arm64*
+
+[decent]#2017-03-23, icon:exclamation-circle[] http://openjdk.java.net/projects/jdk9/[*91* JEPs]#
+
+[.notes]
+--
+The *biggest* release of all.
+
+* Mostly modular JRE & accompagning tools
+* Many helpful API enhancements
+* …and *Performance* enhancements!
+--
+
+=== v10
+* `var`: *Local-Variable Type Inference*
+* *Performance*: GC, Class-Data Sharing, Threads, …
+* _Experimental:_ *Graal AoT-Compiler*
+
+[decent]#2018-03-20, http://openjdk.java.net/projects/jdk/10/[12 JEPs]#
+[.notes]
+--
+* `var`: really noteable feature
+* …and *Performance!*
+--
+
+=== v11 [LTS]
+* New *HTTP/2- & Websocket*-Client
+* *New GCs*: Low-latency ZGC, No-op Epsiolon GC
+* *Ex-payware:* *Flight Recorder*, ZGC, CDS, … +
+  → Oracle JDK ≌ OpenJDK
+* *Dropped:* Java EE, JavaFX, CORBA
+* HTML5 Javadoc, *Unicode 10*, …
+// * `#!/bin/java`
+* *Updated Crypto*: TLS 1.3, new Kex & Ciphers
+//* `var` für lambda params → `(@Nonnull var x) -> x.do()`
+//* Deprecation: Bundled Nashorn JavaScript Engine
+
+[decent]#2018-09-25, http://openjdk.java.net/projects/jdk/11/[17 JEPs]#
+[.notes]
+--
+.Polishing & Cleanup release
+* Many cleanups like dropping EE, JavaFX, CORBA
+* Payware → FOSS
+* New GCs which improve… *Performance*
+--
+
+=== v12
+* *Low-pause GC* „Shenandoah“
+* *Microbenchmark Suite*
+* _Preview:_ Switch Expressions
+* *Performance* improvements +
+  [verydecent]#(CDS, G1 GC, Constants)#
+
+[decent]#2019-03-19, http://openjdk.java.net/projects/jdk/12/[8 JEPs]#
+[.notes]
+--
+* Switch Preview … stays Preview in 13
+* Again: *Performance, Performance, Performance…*
+--
+
+=== v13
+* _Updated Preview:_  *Switch-Expression*
+* _Preview:_ *Text Blocks*
+* *Performance* improvements +
+  [verydecent]#(AppCDS, ZGC, Socket)#
+
+icon:calendar-alt[] [decent]#2019-09-17, http://openjdk.java.net/projects/jdk/12/[5 JEPs]#
+
+[.notes]
+--
+* Even more playstuff! Adding Text blocks
+* Again: Performance!
+--
+
+// === Vorher/Nachher-Beispiel?
+// * Video was `var`, final-efftive try catch, etc, nutz?
+// * eher nicht:

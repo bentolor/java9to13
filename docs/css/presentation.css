@@ -1,0 +1,463 @@
+/*
+   Colors: 
+   - base bg: #ffcea3    - border:  #745d48    - bglight: #fff8f1c0
+   - bgdark: #745d4840   - vdark: #33291f  
+ */
+
+
+
+/* --------------------------------------------------- general settings */
+/* more decent background parallax image */
+/* Hintergrund abschwächen */
+
+/* ex: e7b68b */
+body {
+  background: #ffcea3;
+  background: -moz-radial-gradient(center, circle cover, #fff 0%, #ffcea3 100%);
+  background: -webkit-gradient(radial, center center, 0px, center center, 100%, color-stop(0%, #fff), color-stop(100%, #ffcea3));
+  background: -webkit-radial-gradient(center, circle cover, #fff 0%, #ffcea3 100%);
+  background: -o-radial-gradient(center, circle cover, #fff 0%, #ffcea3 100%);
+  background: -ms-radial-gradient(center, circle cover, #fff 0%, #ffcea3 100%);
+  background: radial-gradient(center, circle cover, #fff 0%, #ffcea3 100%); 
+  background-color: #ffcea3;
+}
+/* .backgrounds {  opacity: 0.6; } */
+
+
+section.red.background {
+  background-color: red;
+}
+
+section.green.background {
+  background-color: green;
+}
+
+.decent, .decent * {     color: #33291fa0; }
+.decent A { text-decoration: underline; }
+
+SPAN.verydecent, SPAN.verydecent A, P span.verydecent * {
+    color: #33291f30;
+}
+
+
+SECTION.bonuscontent H2::before {
+    content: "BONUS: ";
+    color: #f00;
+}
+
+SECTION .title {
+  font-family: "Quicksand", sans-serif;
+  font-weight: bold; 
+  text-decoration: underline;
+  line-height: 1em; 
+  margin-bottom: -.4rem;
+  margin-top: 1.2rem;
+  color: #33291fe0
+}
+
+
+
+/* condensed callouts */
+.reveal .colist {
+  font-size: 28px;
+  width: 90%;
+  margin: 0 auto;
+}
+.reveal .colist table td {
+    padding: 0.15em 0.5em; 
+}
+
+/* .reveal h1 {  font-size: 3.77em; }
+.reveal h2 {  font-size: 2.11em;  }
+.reveal h3 {  font-size: 1.55em; }
+.reveal h4 {  font-size: 1em; } */
+
+/* ----------------- */
+
+
+/* Decent regular text, emphasize strongs .*/
+.reveal {
+    /* color: #ccc; */
+    /* font-family: 'Rajdhani', sans-serif; 
+    font-size: 42x; */
+}
+
+/* .reveal strong, .reveal h1, .reveal h2 {
+    margin: 0 0 .6em 0;
+    font-weight: 700;
+    letter-spacing: -0.03em;
+} */
+
+/* .reveal h6 {
+    font-family: 'Rajdhani', sans-serif;
+    margin: 1em 0 .3em 0;
+    text-align: left;
+    font-weight: 700;
+    letter-spacing: -0.03em;
+    font-size: 100%;
+} */
+
+/* Aufzählung nicht zentrieren, wenn sie in einem Shrinking Container stecken.*/
+.reveal .container ol, .reveal .container dl, .reveal .container ul {
+    display:table;
+}
+/* Shrinking DIV */
+.reveal DIV.container {
+  display: inline-block;
+}
+
+
+
+/* --- Layout Helper  --------------------------------------------------- */
+
+
+.reveal .left {     text-align: left; }
+.reveal .left PRE { margin: 20px 0; width: 100%; }
+.reveal .pc90 {     max-width: 90%;  margin-left: auto; margin-right: auto; }
+.reveal .pc80 {     max-width: 80%;  margin-left: auto; margin-right: auto; }
+.reveal .pc70 {     max-width: 70%;  margin-left: auto; margin-right: auto; }
+
+/* poor-mans 3col layout */
+.col3-l { float: left; width: 33% }
+.col3-lc { float: left; width: 66% }
+.col3-c { width: 33%; display: inline-block; }
+.col3-cr { float: right; width: 66% }
+.col3-r { float: right; width: 33% }
+
+.small p, .small li, p.small, div.small, span.small, .small code, .TABLE.small, .small TH {
+    font-size: 94% !important;
+}
+.x-small p, .x-small li, p.x-small, div.x-small, span.x-small, .x-small code, TABLE.x-small, .x-small TH {
+    font-size: 86% !important;
+}
+.reveal .x-small TH, .reveal .x-small TD, .x-small TD P {
+  padding: 0.1em 0.25em;
+  margin: 8px 0;
+}
+.xx-small p, .xx-small li, p.xx-small, div.xx-small, span.xx-small, .xx-small code, .xx-small TABLE, .xx-small TH {
+    font-size: 78% !important;
+}
+.small LI P {
+  margin: 12px 0;
+}
+.x-small LI P, .xx-small LI P {
+  margin: 6px 0;
+}
+
+
+/* --- Darstellung Tweaks ----------------------------------------------- */
+
+/* Blaue Hervorhebung */
+.reveal .emphasize {
+    color: #fa4242; }
+.reveal .emphasize A {
+  color:blue;
+  text-decoration: underline;
+}
+
+/* Kein max height für Codeblöcke */
+.reveal pre code {
+    max-height: none;
+}
+
+/* Plain Images ohne Buzz */
+.reveal img.plain {
+  margin: 0;
+  background: none;
+  border: none;
+  box-shadow: none; }
+
+/* Plain Images ohne Buzz */
+.reveal img.flag {
+  margin: 0;
+  background: none;
+  border: none;
+  box-shadow: none;
+  height: 0.8em;}
+
+/* Left-Floating Icon. */
+.reveal img.floaticon {
+    max-width: 120px;
+    margin: .2em .7em .2em 0;
+    float: left;
+    clear: both; }
+/* Label für Floaticon */
+.reveal p.floaticon {
+    margin-left: 150px; }
+
+/* Top & bottom gaps */
+.tgap {
+  margin-top: 1.6em  }
+.bgap {
+  margin-bottom: 1.6em }
+.reveal .glow {
+  text-shadow: 0 0 0.5em #ccc, 0 0 0.5em #ccc;
+  -webkit-filter: drop-shadow(0px 0px 30px rgba(255,255,255,1));
+  filter: drop-shadow(0px 0px 30px rgba(255,255,255,1));
+}
+
+/* Inline code */
+.reveal code {
+  border-radius: 5px;
+  padding: 1px 7px;
+  border: 1px solid rgba(255,255,255,.4);
+  background: #745d4840;
+  font-size: .8em;
+  white-space: nowrap; }
+.reveal pre code {
+  padding: 20px;
+  background: #fff8f1c0;
+  border: 1px solid #745d48;
+  font-size: 1.2em;
+  line-height: 1.2em;
+  white-space: pre-wrap; }
+
+.reveal .lightbg { background: #fff8f1d0; }
+.reveal .decentlightbg { background: #fff8f130; }
+
+/* Absatzabstand */
+/* .reveal p {
+  margin: .4em 0 .2em 0; } */
+/* Text links*/
+/*.reveal .slides p {
+  text-align: left; }*/
+/* Listen: Größerer linker Einzug. */
+/* .reveal ol, .reveal dl, .reveal ul {
+  margin: 0 0 0 1.6em; 
+}  */
+
+
+/* --------------------------------------------------------- Restylings */
+
+/* Less indenting: was 1em */
+.reveal ol,.reveal dl, .reveal ul {
+  margin: 0 0 0 0.4em;
+  }
+
+.reveal section.degrade h2 {
+  text-transform: none;
+}
+
+/* No blue links */
+.reveal A {
+  color: #33291f;
+  text-decoration-line: underline;
+  text-decoration-style: dashed;
+  text-decoration-color: #745d48;
+}
+.reveal A:hover {
+  text-decoration-style: solid;
+  color: blue;
+  text-decoration-color: blue;
+}
+
+@import url('../fonts/indie-flower.css');
+/* other blockquote presentation */
+.reveal blockquote {
+  font-family: 'Indie Flower', cursive;
+  font-size: 48px;
+  box-shadow: none;
+  padding: 0 0.6em;
+  border-top: 5px solid #745d48;
+  border-bottom: 5px solid #745d48;
+  text-align: right;
+  color: #745d48;
+  background: #ffffffa0;
+}
+
+/* ------------------------------------------------------------*/
+.col2 {
+  width:48% !important;
+  margin: 0 1% !important;
+  float:left;
+}
+/* Aufzählung nicht zentrieren im 2col layout.*/
+.reveal .col2 ol, .reveal .col2  dl, .reveal .col2  ul {
+    display:table;
+}
+
+
+.float-left {
+  float:left;
+}
+
+
+.reveal .clear {
+  clear: both; 
+}
+
+/* Keine Einengung der width*/
+/* .reveal blockquote {
+  width: 80%;
+  text-align: left;
+} */
+
+
+/* --------------------------------------------------------- */
+/* a specially decent code ref */
+.c-ref  {
+    font-weight: lighter !important;
+    font-size: 50% !important;
+    vertical-align: super !important;
+    margin: 0 8px !important;
+    opacity: 0.6  !important;
+}
+.c-ref > code {
+    border: 1px solid rgba(255,255,255,.6) !important;
+    background:  darkblue !important;
+}
+A.c-ref > code {
+    color: whitesmoke !important;
+    text-decoration: underline !important;
+}
+
+/* ------ Version & Preview Bades, JEP links -- */
+.jep, .version, .preview {
+    font-size: 30%;
+    letter-spacing: 0.04em;
+    vertical-align: 2em;
+    margin: 0px;
+    border-radius: 5px;
+    padding: 0px 6px 1px ;
+}
+.jep {
+    border: 2px solid #745d4880;
+    background-color: #745d48a0;  
+}
+.jep:hover {
+    border: 2px solid #33291f;
+    background-color: #745d48;
+}
+.jep A {
+    color: white;
+    text-decoration: none;
+}
+.version {
+    border: 1px solid blue;
+    background:  lightblue;
+    color: black;
+    font-weight: bold;
+}
+.preview {
+    border: 1px solid black;
+    background:  deeppink;
+    color: white;
+}
+
+
+
+/* ------------------------------------------------------ The refs section */
+DIV.refs {
+  background-color: rgba(255,255,255,0);
+  border-top: 1px solid rgba(0,0,0,.2);
+  padding: 2px 0 0 0;
+  width: 100%;
+  position: fixed;
+  left: 0;
+  bottom: 0;
+  text-align: right;
+}
+
+DIV.refs P, DIV.refs P A {
+  color: rgba(0,0,0,.4);
+  margin: 0;
+}
+
+DIV.refs DIV.ulist {
+  margin: 0; padding: 0;
+      font-size: 1.3rem;
+    line-height: 0.9;
+
+}
+
+DIV.refs DIV.ulist UL {
+    list-style-type: none;
+    width: 100%;
+    padding: 0;
+    margin: 0;
+}
+DIV.refs DIV.ulist UL LI {
+  width: 50%;
+  float: right;
+  text-align: center;
+}
+
+/* hovering effects */
+DIV.refs:hover {
+  background-color: #745d4860;
+  cursor: pointer;
+}
+DIV.refs:hover LI P {
+  color: black;
+}
+DIV.refs LI:hover P A {
+  text-decoration: underline;
+  color: blue;
+}
+
+/* --------------------------------------------------- special slides styles */
+SECTION SPAN.tldr {
+  font-size: 4em;
+}
+
+/* #licence { left: 0; position: absolute; top: 560px; z-index: 1; font-size: 0.46em;
+    color: #ccc; width: 100%; text-align: right }
+#licence a { color: #aaf; text-decoration: underline;}
+#licence img { border:0; margin:4px 0 0 0; opacity: 0.4; }
+#version, #helpfooter, #rightsection  {
+    position: absolute; text-align: center; top: 500px; z-index: 1; font-size: .7em; color: #ccc; width: 100%;
+}
+#version        { text-align: center }
+#helpfooter     { text-align: left   }
+#rightsection   { text-align: right  } */
+
+
+
+/* ID cards auf Einstiegsfolie  ------------------------------------------------------ */
+/* .reveal DIV.profile {
+  margin: 60px 30px;
+  width: 400px;
+  font-size: .9em;
+  font-weight: 200;
+  float: left;
+}
+.profile .profile-sidebar {
+  padding: 10px 0 10px 0;
+  border: 1px solid rgba(125,125,100,1);
+  background: rgba(63,63,50,.7);
+}
+.profile .profile-userpic {
+  padding: 0px 10px
+}
+.profile .profile-userpic img {
+  float: left;
+  margin: 0 auto ;
+  width: 100px;
+  height: 100px;
+  -webkit-border-radius: 50% !important;
+  -moz-border-radius: 50% !important;
+  border-radius: 50% !important;
+}
+.profile .profile-usertitle {
+  text-align: center;
+  margin-top: .6em;
+  font-weight: 700;
+}
+.profile .profile-usertitle-name {
+  font-size: .8em;
+  font-weight: 600;
+  line-height: 1em;
+}
+.profile .profile-usertitle-job {
+  color: #f99;
+  font-size: 0.75em;
+  font-weight: 300;
+}
+.profile .profile-content {
+  padding: 5px;
+  border: 1px solid rgba(255,255,255,.2);
+  background: rgba(63,63,63,.8);
+  font-size: 0.6em;
+  font-weight: 600;
+
+} */
