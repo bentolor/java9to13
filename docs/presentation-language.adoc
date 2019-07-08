@@ -1,5 +1,5 @@
 [.lightbg,background-video="videos/woman-study.mp4",background-video-loop="true",background-opacity="0.7"]
-== Language 
+== Language
 
 === Local Variable Type Inference [jep]#https://openjdk.java.net/jeps/286[JEP 286]#
 
@@ -45,7 +45,7 @@ Really a beauty
 // var wontCompile = null;
 // var wontCompile = {-1, 1};
 
-var myMap = new HashMap<>(); 
+var myMap = new HashMap<>();
 myMap.put(42, "The answer");
 // var wontCompile = myMap.get(42).trim(); <2>
 
@@ -166,7 +166,7 @@ private List<String> safeVarargsMethod(List<String>... lists) { … }
 [.col2]
 --
 [source,bash]
-.Unlock Compilation 
+.Unlock Compilation
 ----
 javac --release xx --enable-preview
 ----
@@ -190,7 +190,7 @@ java --enable-preview …
 [.notes]
 --
 * New in Java 12
-* Allow to preview/use features. 
+* Allow to preview/use features.
 * Forces awareness by using toggle switch on _compiling and running_
 --
 
@@ -200,7 +200,7 @@ java --enable-preview …
 === `switch` in Java 8
 
 [source,java]
----- 
+----
     enum Direction {N, S, W, E}
 
     String switchExpressionJDK8(Direction way) {
@@ -221,7 +221,7 @@ java --enable-preview …
         }
         return result;
     }
----- 
+----
 [.notes]
 --
 * Error-prone
@@ -234,11 +234,11 @@ java --enable-preview …
 === Switch-Expression [jep]#https://openjdk.java.net/jeps/325[JEP 325]# [version]#12# [jep]#https://openjdk.java.net/jeps/354[JEP 354]# [version]#13# [preview]#Preview#
 
 [source,java]
----- 
+----
 String switchExpressionPreview13(Direction way) {
     return switch (way) {                         <1>
         case N -> "Up";                           <2>
-        case S -> { yield "Down"; }               <3> 
+        case S -> { yield "Down"; }               <3>
         case E, W -> "Somewhere left or right";
         // default -> "Foo"                       <4>
     };
@@ -254,7 +254,7 @@ String switchExpressionPreview13(Direction way) {
 
 [.notes]
 --
-* Preview kommt durchaus zum Einsatz:  Switch-Expression wurde mit Java 12 eingeführt und in Java 13 verändert. 
+* Preview kommt durchaus zum Einsatz:  Switch-Expression wurde mit Java 12 eingeführt und in Java 13 verändert.
 
 * `switch` can be used as expression
 * `->` instead of `:` → no `break;` necessary!
@@ -272,7 +272,7 @@ String switchExpressionPreview13(Direction way) {
 ----
 Object obj = engine.eval(
     "function hello() {\n" +
-    "     print('Hi, world”');\n" +
+    "   print(\"Hi, world!\");\n" +
     "}\n" +
     "\n"  +
     "hello();\n"
@@ -282,14 +282,14 @@ Object obj = engine.eval(
 
 [.col2]
 --
-.Java 12
+.Java 13
 [source,java]
 ----
 Object obj = engine.eval("""
     function hello() {
-        print('Hi, world”');
+       print("Hi, world!");
     }
-    
+
     hello();
     """);
 ----
@@ -297,7 +297,7 @@ Object obj = engine.eval("""
 
 [.small.decent]
 --
-* Leading space-Character identation removed + 
+* Leading space-Character identation removed +
   up to the most-left character in the block including the closing `"""`
 * Normalizes line-endings to `\n` and removes all trailing white spaces
 --
@@ -333,8 +333,8 @@ Object obj = engine.eval("""
 [source,java]
 ----
 module com.mysql.jdbc {
-    requires java.sql;             // Module dependency  
-    exports com.mysql.jdbc;        // Export module package → enables access  
+    requires java.sql;             // Module dependency
+    exports com.mysql.jdbc;        // Export module package → enables access
     provides java.sql.Driver       // SPI: Provide service instance
         with com.mysql.jdbc.Driver;
 }

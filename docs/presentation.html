@@ -141,14 +141,14 @@ try (inputStream) { … }</code></pre>
 <aside class="notes"><div class="ulist"><ul><li><p>Preview kommt durchaus zum Einsatz:  Switch-Expression wurde mit Java 12 eingeführt und in Java 13 verändert.</p></li><li><p><code>switch</code> can be used as expression</p></li><li><p><code>&#8594;</code> instead of <code>:</code> → no <code>break;</code> necessary!</p></li><li><p>Lambdas can be used to. For <em>expressions</em> they must <code>yield</code> a value <span class="version">13</span>
 + <code>default</code> can be ommitted if a) no expression or b) <code>enum</code> with every value handled</p></li></ul></div></aside></section><section id="_text_blocks_jep_355_13_preview"><h2>Text Blocks <span class="jep"><a href="https://openjdk.java.net/jeps/355">JEP 355</a></span> <span class="version">13</span> <span class="preview">Preview</span></h2><div class="openblock col2"><div class="content"><div class="title">Java 8</div><pre class="highlight listingblock"><code data-noescape class="java language-java">Object obj = engine.eval(
     "function hello() {\n" +
-    "     print('Hi, world”');\n" +
+    "   print(\"Hi, world!\");\n" +
     "}\n" +
     "\n"  +
     "hello();\n"
     );</code></pre></div></div>
-<div class="openblock col2"><div class="content"><div class="title">Java 12</div><pre class="highlight listingblock"><code data-noescape class="java language-java">Object obj = engine.eval("""
+<div class="openblock col2"><div class="content"><div class="title">Java 13</div><pre class="highlight listingblock"><code data-noescape class="java language-java">Object obj = engine.eval("""
     function hello() {
-        print('Hi, world”');
+       print("Hi, world!");
     }
 
     hello();
