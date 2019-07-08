@@ -5,14 +5,15 @@
 // we want local served fonts. Therefore patched sky.css
 //:revealjs_theme: sky
 :revealjs_customtheme: css/sky.css
-:revealjs_autoSlide: 0
+:revealjs_autoSlide: 5000
 :revealjs_history: true
 :revealjs_fragmentInURL: true
 :revealjs_viewDistance: 5
 :revealjs_width: 1408
 :revealjs_height: 792
-:revealjs_controls: false
+:revealjs_controls: true
 :revealjs_controlsLayout: edges
+:revealjs_controlsTutorial: true
 :revealjs_slideNumber: c/t
 :revealjs_showSlideNumber: speaker
 :revealjs_autoPlayMedia: true
