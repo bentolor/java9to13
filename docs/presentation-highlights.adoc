@@ -37,7 +37,7 @@ The *biggest* release of all.
 
 === v11 [LTS]
 * New *HTTP/2- & Websocket*-Client
-* *New GCs*: Low-latency ZGC, No-op Epsiolon GC
+* *New GCs*: Low-latency ZGC, No-op Epsilon GC
 * *Ex-payware:* *Flight Recorder*, ZGC, CDS, … +
   → Oracle JDK ≌ OpenJDK
 * *Dropped:* Java EE, JavaFX, CORBA
