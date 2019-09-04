@@ -14,7 +14,7 @@ link.rel = 'stylesheet';
 link.type = 'text/css';
 link.href = window.location.search.match( /print-pdf/gi ) ? "reveal.js/css/print/pdf.css" : "reveal.js/css/print/paper.css";
 document.getElementsByTagName( 'head' )[0].appendChild( link );</script><!--[if lt IE 9]><script src="reveal.js/lib/js/html5shiv.js"></script><![endif]--><link rel="stylesheet" href="css/presentation.css"></head><body><div class="reveal"><div class="slides"><section class="title" data-state="title"><h1>Power Catch-up</h1><h2>Everything Practical and Important in Java 9 to 13</h2><div class="preamble"><aside class="notes"><div class="ulist"><ul><li><p>Zur Person: Technology Advisor bei der eXXcellent solutions: IT Dienstleister mit Standorten in Ulm, München, Stuttgart, Darmstadt, Berlin: Individuelle Softwarelösungen – vorrangig Java &amp; Web; auch .NET/Mobile/SAP. Klassisch.</p></li><li><p>Bin seit 18+ Jahren führend &amp; beratend im  Projektgeschäft unterwegs.
-Stets in der Rolle technische Innovationen den Projekte &amp; Kollegen näher zu bringen.</p></li><li><p>Lange Jahre war das im Java-Umfeld eher entspannter. Innovationen eher im Umfeld Docker/Kubernetes und auf der JVM eher Kotlin wo ich ebenfalls großer Fan bin.</p></li><li><p>Hat sich aber kräfitg geändert. Auch bei Java hat in letzter Zeit mehr Forwärtsbewegung eingesetzt und es gilt als auch im Kernsprache selbst wieder mehr „am Ball“ zu bleiben.</p></li></ul></div></aside></div><p class="author"><small>Benjamin Schmid @bentolor &lt;benjamin.schmid@exxcellent.de&gt;</small></p></section>
+Stets in der Rolle technische Innovationen den Projekte &amp; Kollegen näher zu bringen.</p></li><li><p>Lange Jahre war das im Java-Umfeld eher entspannter. Innovationen eher im Umfeld Docker/Kubernetes und auf der JVM eher Kotlin wo ich ebenfalls großer Fan bin.</p></li><li><p>Hat sich aber kräfitg geändert. Auch bei Java hat in letzter Zeit mehr Forwärtsbewegung eingesetzt und es gilt als auch im Kernsprache selbst wieder mehr „am Ball“ zu bleiben.</p></li></ul></div></aside></div><p class="author"><small>Benjamin Schmid @bentolor &lt;benjamin.schmid@exxcellent.de&gt;</small></p> <p><small>Navigation help: <code>?</code></small></p></section>
 <section><section id="_tldr" data-background-image="images/manuscript.jpg"><h2><span class="tldr"><code>tl;dr</code></span></h2><div class="openblock refs"><div class="content"><div class="ulist"><ul><li><p>Photo by <a href="https://de.freeimages.com/photographer/bjearwicke-46112">Benjamin Earwicker</a></p></li><li><p>Another photo</p></li><li><p>lorem</p></li></ul></div></div></div><aside class="notes"><div class="ulist"><ul><li><p>Motivation: Too long – didn&#8217;t read – Eine komprimierte Zusammenfassung aller wichtigen Änderungen.</p></li><li><p>Challenge, denn</p><div class="ulist"><ul><li><p>High-level Überblick vs.</p></li><li><p>Viele wertvolle API-Details und damit Anschauungsmaterial / Codebeispiele</p></li></ul></div></li></ul></div></aside></section><section id="_what_happened" data-background-image="images/jdk-timeline.png" data-background-size="contain"><div class="openblock refs"><div class="content"><div class="ulist"><ul><li><p>[Support Modell: <a href="https://craftsmen.nl/java-11-is-here-to-stay/" class="bare">https://craftsmen.nl/java-11-is-here-to-stay/</a>]</p></li></ul></div></div></div>
 <aside class="notes"><div class="paragraph"><p>What happened? You all heard of it!</p></div>
 <div class="ulist"><ul><li><p>New cadence – every 6 months new java major release</p></li><li><p>No support overlap → Support Cliff</p></li><li><p>Every 3 years a LTS; v11: 2018-09; next v17: 2021-09</p></li></ul></div></aside></section><section id="_everything_is_so_awful" class="decentlightbg" data-background-video="videos/fog-hands.mp4" data-background-video-loop data-background-opacity="0.6"><h2>» Everything-is-so-awful™ «</h2><div class="olist arabic"><ol class="arabic"><li><p><strong>Oracle Java 8 installations are dead!</strong><br>
@@ -542,7 +542,7 @@ JDK 9</p></li></ul></div>
 // See https://github.com/hakimel/reveal.js#configuration for a full list of configuration options
 Reveal.initialize({
   // Display presentation control arrows
-  controls: false,
+  controls: true,
   // Help the user learn the controls by providing hints, for example by
   // bouncing the down arrow when they first encounter a vertical slide
   controlsTutorial: true,
@@ -604,7 +604,7 @@ Reveal.initialize({
   // speaker view
   defaultTiming: 55,
   // Enable slide navigation via mouse wheel
-  mouseWheel: false,
+  mouseWheel: true,
   // Hides the address bar on mobile devices
   hideAddressBar: true,
   // Opens links in an iframe preview overlay
