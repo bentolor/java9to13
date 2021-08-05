@@ -4,13 +4,12 @@
 #    https://asciidoctor.org/docs/asciidoctor-revealjs/
 
 SRCFILE=presentation.adoc
-SRCFILE=presentation.adoc
 
 echo "Rendering presentation.adoc"
 bundle exec asciidoctor-revealjs $SRCFILE
 
 echo "Starting Webserver on :8000"
-python -m SimpleHTTPServer >/dev/null 2>&1 & 
+python -m http.server >/dev/null 2>&1 & 
 
 chromium-browser http://localhost:8000/presentation.html > /dev/null &
 

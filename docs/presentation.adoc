@@ -1,11 +1,11 @@
-= Power Catch-up: Everything Practical and Important in Java 9 to 13
+= Unter der Haube: Deep Dive 4 – Die wichtigsten Neuerungen seit Java 11
 :author: Benjamin Schmid @bentolor <benjamin.schmid@exxcellent.de>
-:date: 2019-07-04
+:date: 2021-09-14
 :icons: font
 // we want local served fonts. Therefore patched sky.css
 //:revealjs_theme: sky
 :revealjs_customtheme: css/sky.css
-:revealjs_autoSlide: 5000
+//:revealjs_autoSlide: 5000
 :revealjs_history: true
 :revealjs_fragmentInURL: true
 :revealjs_viewDistance: 5
@@ -32,11 +32,16 @@
 [.notes]
 --
 * Zur Person: Technology Advisor bei der eXXcellent solutions: IT Dienstleister mit Standorten in Ulm, München, Stuttgart, Darmstadt, Berlin: Individuelle Softwarelösungen – vorrangig Java & Web; auch .NET/Mobile/SAP. Klassisch.
-* Bin seit 18+ Jahren führend & beratend im  Projektgeschäft unterwegs. 
+* Bin seit 20+ Jahren führend & beratend im  Projektgeschäft unterwegs. 
   Stets in der Rolle technische Innovationen den Projekte & Kollegen näher zu bringen. 
 * Lange Jahre war das im Java-Umfeld eher entspannter. Innovationen eher im Umfeld Docker/Kubernetes und auf der JVM eher Kotlin wo ich ebenfalls großer Fan bin. 
 * Hat sich aber kräfitg geändert. Auch bei Java hat in letzter Zeit mehr Forwärtsbewegung eingesetzt und es gilt als auch im Kernsprache selbst wieder mehr „am Ball“ zu bleiben. 
 --
+
+
+
+
+
 
 include::presentation-intro.adoc[] 
 
