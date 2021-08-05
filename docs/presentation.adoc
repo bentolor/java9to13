@@ -31,34 +31,62 @@
 
 [.notes]
 --
-* Zur Person: Technology Advisor bei der eXXcellent solutions: IT Dienstleister mit Standorten in Ulm, München, Stuttgart, Darmstadt, Berlin: Individuelle Softwarelösungen – vorrangig Java & Web; auch .NET/Mobile/SAP. Klassisch.
-* Bin seit 20+ Jahren führend & beratend im  Projektgeschäft unterwegs. 
-  Stets in der Rolle technische Innovationen den Projekte & Kollegen näher zu bringen. 
-* Lange Jahre war das im Java-Umfeld eher entspannter. Innovationen eher im Umfeld Docker/Kubernetes und auf der JVM eher Kotlin wo ich ebenfalls großer Fan bin. 
-* Hat sich aber kräfitg geändert. Auch bei Java hat in letzter Zeit mehr Forwärtsbewegung eingesetzt und es gilt als auch im Kernsprache selbst wieder mehr „am Ball“ zu bleiben. 
 --
 
 
+== Agenda
 
+* Performance
+** Application CDS
+*** Demo
+** Vector API
+
+* GraalVM
+** Überblick & Stand
+** Helinnaut, Quarkus, Micronaut
+** Java CLI native image
+** Demo
+
+* Memory
+** Überblick Änderungen GC
+** GC: ZGC
+** GC: Shennadoah
+** GC: G1 & andere
+** Fazit
+
+* Observability
+** JFR & JMC, JFR Streaming
+*** Demo JFR / JMC
+** JVM Diagnostics: -XX+ExtensiveErrorReports -XX:+ShowCodeDetailsInExceptionMessages -Xlog:async`
+*** Demo
+
+
+* Tools
+** jdeps
+** javadoc
+*** Demo
+** JEP 392: Packaging Tool 
+
+* JVM
+** Foreign Function & Foreign Memory
+*** Demo / Example Code
+** Strongly Encapsulate JDK Internals by Default 
+
+* Plattform & Maintenance
+** JEP 391: macOS/AArch64 Port
+** Cipher Streams & Signatures
+** Unicode
 
 
 
 include::presentation-intro.adoc[] 
-
 include::presentation-agenda.adoc[] 
-
 include::presentation-highlights.adoc[] 
-
 include::presentation-language.adoc[] 
-
 include::presentation-api.adoc[] 
-
 include::presentation-tooling.adoc[]
-
 include::presentation-outlook.adoc[]
-
 include::presentation-appendix.adoc[]
-
 
 [pass]
 ++++
