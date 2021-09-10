@@ -7,7 +7,7 @@ repositories {
 }
 
 java {
-    sourceCompatibility = JavaVersion.VERSION_12
+    sourceCompatibility = JavaVersion.VERSION_17
     group = "de.bentolor.java9to13samples"
 }
 
@@ -20,7 +20,7 @@ tasks.test {
 }
 
 dependencies {
-    compile("org.jetbrains:annotations:17.0.0")
-    testImplementation("org.junit.jupiter:junit-jupiter-api:5.4.2")
-    testImplementation("org.junit.jupiter:junit-jupiter-engine:5.4.2")
+    api("org.jetbrains:annotations:22.0.0")
+    testImplementation("org.junit.jupiter:junit-jupiter-api:5.7.2")
+    testImplementation("org.junit.jupiter:junit-jupiter-engine:5.7.2")
 }
