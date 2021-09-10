@@ -11,7 +11,7 @@
 :revealjs_viewDistance: 5
 :revealjs_width: 1408
 :revealjs_height: 792
-:revealjs_controls: true
+:revealjs_controls: false
 :revealjs_controlsLayout: edges
 :revealjs_controlsTutorial: true
 :revealjs_slideNumber: c/t
@@ -34,7 +34,7 @@
 == Motor-Upgrade: 3 Kleinigkeiten
 === Exception Error
 === Schnellere GC
-=== Einfachere CDS
+=== Einfachere CDS / JFR Zeitreisen?
 
 
 [.lightbg,background-video="coffee-beans.mp4",background-video-loop="true",background-opacity="0.7"]
@@ -80,9 +80,70 @@
 == Vector API
 
 
-== Application CDS
-=== Overview
-=== Demo
+== Class Data Sharing 
+
+
+=== Class Data-Sharing in a Nutshell
+
+Class Data-Sharing::
+[emphasize]#Reduziert Startzeiten & Speicherbedarf# von JVMs durch `.jsa` Archiv mit Metadaten der Klassen.
++
+→ Klassen liegen damit vorgeparsed in _direkt für die JVM verwendbarem_ Format vor. Das Archiv kann _read-only_ eingebunden werden, was dem OS _Caching_ & _Sharing_ erlaubt.
++
+**Achtung:** Archive sind JVM Plattform- und Versionspezifisch!
+
+Application Class-Data Sharing (AppCDS)::
+Erlaubt zusätzlich Applikations-Klassen in das CDS aufzunehmen
+
+=== Neuerungen im Bereich CDS
+
+Default CDS Archive [version]#12# [jep]#https://openjdk.java.net/jeps/341[JEP 341]#::
+JVM liefert nun per Default ein `classes.jsa` CDS-Archiv mit aus, welches ein Subset der häufigsten JDK-Klassen umfasst.
+
+Dynamic CDS Archive [version]#13# [jep]#https://openjdk.java.net/jeps/350[JEP 350]#::
+Vereinfacht erheblich die Erstellung eigener AppCDS Archive durch automatische Auswahl und Archiverzeugung beim beenden der Java-Applikation.
+
+
+=== AppCDS Archiverstellung
+
+.Erstellung über Liste [version]#11#
+[source,shell]
+----
+$ java -Xshare:off -XX:DumpLoadedClassList=myclasses.txt -cp myapp.jar MyApp
+
+$ java -Xshare:dump -XX:SharedArchiveFile=myapp.jsa \
+       -XX:SharedClassListFile=myclasses.txt -cp myapp.jar
+----
+
+[.fragment]
+.Nutzung des AppCDS-Archives
+[source,shell]
+----
+$ java -XX:SharedArchiveFile=myapp.jsa -cp myapp.jar MyApp
+----
+
+[.fragment]
+.NEU: Automatische Erstellung [version]#13#
+[source,shell]
+----
+$ java -XX:ArchiveClassesAtExit=myapp.jsa -cp myapp.jar MyApp
+----
+
+
+[%notitle]
+=== AppCDS Gewinne
+image::app_cds_time_to_first_response.png[AppCDS Startup Times,height=700]
+[.refs.xx-small]
+--
+Quelle: https://www.morling.dev/blog/building-class-data-sharing-archives-with-apache-maven/
+--
+[.notes]
+--
+* Teils bis zu 40% Reduktion in Startup-Times
+* Noch mehr Potential mit Kombination von `jlink`
+* Quelle hier: Gunnar Morling
+--
+
 
 == GraalVM
 === Überblick & Stand
@@ -143,93 +204,331 @@ image::graalvm-architecture.png[GraalVM ecosystem]
 * xxx
 
 == Memory Management
-=== Überblick Änderungen GC
+=== Überblick Änderungen GC 
+* ZGC Concurrent Class Unloading [version]#12#
+* ZGC Uncommit Unused Memory [jep]#https://openjdk.java.net/jeps/351[JEP 351]# [version]#13#
+* ZGC on macOS [jep]#https://openjdk.java.net/jeps/364[JEP 364]# [version]#14# 
+* ZGC on Windows [jep]#https://openjdk.java.net/jeps/365[JEP 365]# [version]#14# 
+* ZGC Production-Ready [jep]#https://openjdk.java.net/jeps/377[JEP 377] #[version]#15#
+* ZGC -XXSoftMaxHeapSize Flag  [version]#13#
+* ZGC Maximum Heap Size Increased to 16TB [version]#13#
+* ZGC Concurrent Stack Processing [jep]#https://openjdk.java.net/jeps/376[JEP 376]  [version]#16#
+* Allocation of Old Generation of Java Heap on Alternate Memory Devices [version]#12#
+* G1 May Uncommit Memory During Marking Cycle [version]#12#
+* G1 Improve Ergonomics for Sparse PRT Entry Size [version]#13#
+* Serial GC Improvements in Young pause time report [version]#13#
+* Parallel GC Improvements [version]#14#
+* NUMA-Aware Memory Allocation for G1 [jep]#https://openjdk.java.net/jeps/354[JEP 354] [version]#14#
+* CMS: Remove Concurrent Mark and Sweep GC [jep]#https://openjdk.java.net/jeps/363[JEP 363] [version]#14#
+* ParallOldGC: Deprecate SerialOld [jep]#https://openjdk.java.net/jeps/366[JEP 366] [version]#14#
+* Shenandoah self-fixing barriers [version]#14#
+*  Epsilon warns about Xms/Xmx/AlwaysPreTouch configuration [version]#14#
+* Shenandoah asynchronous object/region pinning [version]#14#
+* Shenandoah: A Low-Pause-Time Garbage Collector (Production [jep]#https://openjdk.java.net/jeps/379[JEP 379] [version]#15#
+* Epsilon does not extend TLABs to max size [version]#14#
+* Shenandoah supports concurrent class unloading [version]#14#
+* Shenandoah arraycopy improvements [version]#14#
+* ParallelGC Obsolete -XXUseAdaptiveGCBoundary [version]#15#
+* G1 Improved Ergonomics for Heap Region Size [version]#15#
+* Bug: Disabling large pages on Windows [version]#15#
+* Bug: Disabling NUMA Interleaving on Windows [version]#15#
+* G1 Concurrently Uncommit Memory [version]#16#
+* ParallelGC Enables Adaptive Parallel Reference Processing by Default  [version]#17#
+* Shenandoah: A Low-Pause-Time Garbage Collector (Experimental)  [jep]#https://openjdk.java.net/jeps/189[JEP 189] [version]#12#
+
+
+[.notes]
+--
+* The Z Garbage Collector now supports class unloading.
+* Experimental feature in G1 & Parallel GC allows OldGen on NV-DIMM memory.
+* G1 may now give back Java heap memory to the operating system during any concurrent mark cycle.
+--
+
 === GC: ZGC
+ Z Garbage Collector (ZGC):: 
+  * A scalable low-latency garbage collector. 
+  * Motivation: long GC pauses for app responses
+  * Goals: Pauses <10ms, typical 2ms
+  * Less 15% Throughput drop vs. G1
+  * Heap 8MB~16TB, Linux/Win/macOS
+  * _"Colored Pointers"_ → Object Relocation
+  * Enable: `-XX:+UseZGC`
+  * Production since JDK 15
+
 === GC: Shennadoah
+
+Shenandoah::
+  * A Low-Pause-Time Garbage Collector by concurrent evacuation work
+  * Pause times with Shenandoah are independent of heap size
+  * appropriate if priority on responsiveness and predictable short pauses
+  * trades concurrent cpu cycles and space for pause time improvements
+  * Intro in JDK 12
+  * Production since JDK 15
+  * `-XX:+UseShenandoahGC`
+
+=== GC: Vergleich
+
+* Shenandoah: Pause times with Shenandoah are independent of heap size. Trades concurrent cpu cycles and space for pause time improvements.
+
+* Zing/Azul has a pauseless collector, however that work has not been contributed to OpenJDK.
+
+* ZGC has a low pause collector based on colored pointers. We look forward to comparing the performance of the two strategies.
+
+* G1 mostly concurrent, but it does not do concurrent evacuation. Strategy: "slice up GC pauses according to a user-supplied time target". Will be selected by on most hardware. Pauses: 250ms~850ms. High throughput
+
+* CMS does concurrent marking, but it performs young generation copying at pause times, and never compacts the old generation. 
+
+.Alte GCs
+
+Pausen steigen mit wachsenden Heaps
+
+* SerialGC:  all GC work on a single thread. Nur bis ~100MB Heap empfohlen.
+
+* ParallelGC selects the parallel (throughput) collector, which can perform compaction using multiple threads. Pauses: 200~300ms. Hocher durchsatz
+
 === GC: G1 & andere
 === Fazit
 * ggf. Performance Vergleich o.ä.
+* G1 gibt Speicher schneller frei
 
-
-== JFR
-
-=== Überblick JFR
-** Low overhead, less than 1% → aims for in production usage
-Besser: JDK Mission Control (jmc)
-
-=== Usage JFR
-....
-`jcmd -l` Und `jcmd <pid> JFR.start` → Recording events from all layers: OS → JVM → Java 
-`jcmd <pid> JFR.dump` → dump memory buffer
-jfr commands: print metadata assemble disassemble summary
-....
-
-
-=== Überblick JDK Mission Control (JMC)
-*** "JDK Flight Recorder" (ex: Java Flight Recorder vor FOSS
 [.notes]
 --
-JDK Flight Recorder is built into the JVM and allows you to:
+https://blogs.oracle.com/javamagazine/understanding-the-jdks-new-superfast-garbage-collectors
+https://docs.oracle.com/en/java/javase/17/gctuning/available-collectors.html
+--
 
-    Resolve problems faster
-    Find bottlenecks in your applications
-    Find bottlenecks in ISV provided applications
-        Unhappy with the performance? Send your ISV a (JFR) recording.
-        Do post mortem analysis, even from crash dumps
 
-A few key differentiators between JFR and other, on the surface, similar tools are:
+== JDK Flight Recorder (JFR)
 
-    Extremely low overhead
-        Built into the JVM/JDK by the people developing the JVM
-        High performance flight recording engine and high performance data collection
-        (invariant TSC for time stamping, thread local native buffers, access to data already collected in the runtime, more accurate method profiling (method profiling data even from outside safe-points), faster and more accurate allocation profiling (scalarization not undone by profiler))
-    Safe and reliable in production
-        Tested on all platforms as part of the JVM/JDK-testing
-        Low overhead means no measurable impact on the running application
-    Low overhead + reliability = always on
-        Time machine – just dump the recording data when a problem occurs, and see what the runtime was up to before, up to, and right after the problem occurred 
-        Even upon a JVM process crash, flight recording data from the last couple of minutes will be in the dump allowing you to resolve the issue
-        Any interaction with Oracle support will be faster – just attach a flight recording to your support case
+=== JDK Flight Recorder (JFR) [jep]#https://openjdk.java.net/jeps/328[JEP 328]#
+* OS, JVM, JDK & App Diagnostik
+* extrem geringer Overhead (~1%)
+* built-in & jederzeit aktivierbar
+* always-on möglich → Timemachine
+
+[.emphasize.fragment]
+→ icon:cogs[] **Production** Profiling & Monitoring
+
+[.decent.x-small]
+
+
+[.notes]
+--
+* Ehemals kommerzielles JVM Addon "Java Flight Recorder" 
+* seit Java 11 OpenJDK Bestandteil 
+* Aktivierbar für neue und *bereits laufende* Java-Instanzen
+* Zielmetrik: Weniger als 1% Overhead → no measurable impact on the running application →  klare Ausrichtung für Produktionsverwendung
+* Built by the JVM/JDK people 
+** → access to data already collected, more accurate, faster
+** Safe and reliable in production 
+* always on  →  Time machine – just dump the recording data when a problem occurs, and see what the runtime was up to before, up to, and right after the problem occurred.
+* Even on JVM crash → JFR data avail in dump
 
 JDK Mission Control also contains other tools, such as a JMX Console, and HPROF-dump analyzer and more.
 --
 
-=== Flight Recorder [jep]#https://openjdk.java.net/jeps/328[JEP 328]#
-image:java-mission-control-center.png[Java Mission Control, 800, float="right"]
 
-* icon:cogs[] **Production**- +
-  Profiling & Monitoring 
-* Former Oracle payware  +
-  Open-sourced with Java 11
-* _Flight recording_ start +
-  on new & running `java`
-* Rules → Alerts
+
+
+[%notitle]
+=== JFR Demo 
+
+[col3-lc]
+--
+video::../images/jfr.mp4[jfr-screen.png, height=720,options=nocontrols,background-color="white"]
+--
+
+[col3-r.left.small]
+--
+**Flight Recorder Demo**
+
+.Prozess identifizieren
+  jcmd
+
+.Recording
+  jcmd <pid> JFR.start
+  jcmd <pid> JFR.dump \
+    filename=record.jfr
+
+[.xx-small.decent]
+Optionen: `filename`, `delay`, `dumponexit`, `duration`, `maxage`, `maxsize`, …
+
+
+.Analysieren
+  jfr print record.jfr 
+  jfr print \
+     --events CPULoad \
+     --json record.jfr
+  jfr summary record.jfr
+
+
+
+--
+
+
+
+
+[%notitle,background-video="jmc.mp4",background-video-loop="false",background-size="contain"]
+=== JDK Mission Control (JMC)
+[.refs.xx-small]
+--
+https://openjdk.java.net/projects/jmc/8/
+--
+
+=== JFR Event Streaming [jep]#https://openjdk.java.net/jeps/349[JEP 349]#
+
+[%notitle,transition="fade-out",background-image="jfrstreaming0.png",background-size="contain"]
+=== JDK11
 [.notes]
 --
-*  low-overhead  !
-* previously a commercial addition to the JVM, now open-sourced, part of Java 11
-* `java -XX:StartFlightRecording=settings=default nl.craftsmen.java11demo.MyClass`
---
-[.refs]
---
-* http://jdk.java.net/jmc/
+* Vor JDK14: Start JFR → Dump (File/JMX) → Analyze.
+* Gut für Profiling, schlecht für Continuous Monitoring
 --
 
-=== Neuerungen 
-*** JDK16 introduces a new JFR Eent: `jdk.ObjectAllocationSample`. First supporte in JMC 8.1
-*** Earlier versions: `jdk.ObjectAllocationInNewTLAB` & `jdk.ObjectAllocationOutsideTLAB`; both default to `False`. Can be configured in `%JAVA_HOME%/lib/jfr`
-*** weitere JDR Configurations: delay, disk, dumponexit, duration, filename, name, maxage, maxsize, path-to-gc-roots, settings
-*** GraalVM JFR Support since GraalVM 21.2
-*** weitere Links & Details siehe Description von https://www.youtube.com/watch?v=4g7SB13PWqQ
+[%notitle,transition="fade-out",background-image="jfrstreaming1.png",background-size="contain"]
+=== JDK14
+[.notes]
+--
+* Mit Java 14: JFR Event Streaming:
+* API anbieten um (kontinuierlich) Events des JFR Disk Repo lesen zu können
+* Ziel: Trivial kontinuierlich JFR Events monitoren und darauf reagieren können
+--
 
-=== Demo JFR / JMC
+[%notitle,transition="fade-out",background-image="jfrstreaming2.png",background-size="contain"]
+=== JDK16
+[.notes]
+--
+* JDK 16: Erlaubt auch Remote Streaming
+* JDK16: Neues, leichtgewichterges `jdk.ObjectAllocationSample` **default on**
+* GraalVM ab 21.2 unterstützt ebenfalls JFR
+--
+
+=== JFR Event Streaming API: Beispiel
+
+Reported sekündlich CPU Usage und aktive Locks länger als 10ms:
+
+[source,java]
+----
+try (var rs = new RecordingStream()) {
+  rs.enable("jdk.CPULoad").withPeriod(Duration.ofSeconds(1));
+  rs.enable("jdk.JavaMonitorEnter").withThreshold(Duration.ofMillis(10));
+
+  rs.onEvent("jdk.CPULoad", event -> {
+    System.out.println(event.getFloat("machineTotal"));
+  });
+  rs.onEvent("jdk.JavaMonitorEnter", event -> {
+    System.out.println(event.getClass("monitorClass"));
+  });
+
+  rs.start(); // Blockierender Aufruf, bis Stream endet/geschlossen wird
+  // rs.startAsync(); Alternative im separaten Thread
+}
+----
 
 
-=== JFR & JMC, JFR Streaming
+[.small]
+=== Streaming API: Möglichkeiten
 
-=== Frameworks
+[source.col2.fragment,java]
+.Passiv, eigener Prozess
+----
+EventStream.openRepository()) {…}
+----
 
-in-process; JfrUnit
+[source.col2.fragment,java]
+.Passiv, fremder Prozess
+----
+EventStream.openRepository(Path.of("…")))
+----
+
+[source.fragment,java]
+.Aktiv, eigener Prozess
+----
+try (var stream = new RecordingStream()) { … }
+----
+
+
+[source.fragment,java]
+.Aktiv, fremder Prozess (Remote)
+----
+String url = "service:jmx:rmi:///jndi/rmi://myhost.de:7091/jmxrmi";
+JMXConnector c = JMXConnectorFactory.connect(new JMXServiceURL(url));
+MBeanServerConnection conn = c.getMBeanServerConnection();
+
+try (RemoteRecordingStream stream = new RemoteRecordingStream(conn)) { … }
+----
+
+
+
+[.small.degrade]
+=== Eigene JFR Events
+
+[col2]
+--
+[source,java]
+.Event definieren
+----
+import jdk.jfr.*;
+
+@Name("de.bentolor.ButtonPressed")
+@Label("Button Pressed")
+@StackTrace(false)
+public class ButtonEvent extends Event {
+    @Label("Button name")
+    public String name;
+
+    @Label("Source")
+    public String trigger;
+
+    @Label("Number of Bounces")
+    @DataAmount
+    public int bounces;
+
+    @Label("Has timeouted")
+    public boolean timeouted;
+}
+----
+--
+[col2]
+--
+.Event füttern & auslösen
+[source,java]
+----
+ButtonEvent evt = new ButtonEvent();
+if(evt.isEnabled()) {
+    evt.name = "Button 1";
+    evt.trigger = "Keyboard";
+    evt.begin();
+}
+
+// doSomething()
+
+if(evt.isEnabled()) {
+    evt.end();
+    evt.timeouted = false;
+    evt.bounces = 3;
+    evt.commit();
+}
+----
+--
+
+
+[.degrade]
+=== Weitere Anwendungsfälle
+
+[.small.col2]
+Unit- & Performance-Testing::
+Annahmen zum Verhalten von API, JVM & Co. in Testcases sichern. +
+ +
+[decent]#Unterstützende Frameworks z.B. https://github.com/moditect/jfrunit[JfrUnit] oder https://github.com/quick-perf/quickperf[QuickPerf]#
+
+
+[.small.col2]
+Timeshift-Analyse::
+Recording mitlaufen lassen und bei Performance-Problemen rückwirkend seit Problemstartpunkt aus dem JFR Event Repository extrahieren & analysieren (_„Timeshift“_)
+
+
+
 
 == JVM Diagnostics
 
@@ -374,7 +673,7 @@ data outside of the Java runtime […] without the brittleness and danger of JNI
 ** erstmals JDK14, dann 15, 16 und nun zusammengeführt in 17
 --
 
-
+[.degrade]
 === Einfacher Funktionsaufruf
 
 [source,java]
@@ -399,6 +698,7 @@ class CallPid {
 <2> gewünschte _Java-Signatur_ des Java Foreign Handles
 <3> _Ziel-Signatur_ der aufzurufenden C-Funktion
 
+[.degrade]
 === Aufruf mit Pointer (1/2)
 [source,c]
 ----
@@ -423,10 +723,10 @@ var cryptoBoxSeal = CLinker.getInstance().downcallHandle(
 
 
 
+[.small.degrade]
 === Aufruf mit Pointer (2/2)
 
-
-.Allozierter, nativer Heap wird vom GC via `ResourceScope` verwaltet
+.Foreign Heap wird vom GC via `ResourceScope` verwaltet
 [source,java]
 ----
 try (var scope = ResourceScope.newConfinedScope()) { … }
@@ -498,9 +798,6 @@ https://jdk.java.net/panama/[Project Panama Early-Access Builds]
 [.lightbg,background-video="hammer.mp4",background-video-loop="true",background-opacity="0.7"]
 == Tooling
 
-[%notitle,background-video="jshell-demo.mp4",background-size="contain"]
-=== REPLS: `jshell` [jep]#https://openjdk.java.net/jeps/222[JEP 222]#
-
 === jdeps
 === javadoc (+Demo?)
 
@@ -558,22 +855,27 @@ TODO
 
 
 [.lightbg,background-video="industrial.mp4",background-video-loop="true",background-opacity="0.6"]
-=== Resources
+=== Ressourcen
 
 [.col3-l.xx-small]
 --
 .Referenzwerke
 * xx
-* link:https://chriswhocodes.com/vm-options-explorer.html[VM Options Explorer]
+* https://chriswhocodes.com/vm-options-explorer.html[VM Options Explorer]
+* https://docs.oracle.com/en/java/javase/17/gctuning/available-collectors.html[HotSpot Tuning Guide: Available Collectors]
 
 .Artikel
 * https://blog.arkey.fr/2021/09/04/a-practical-look-at-jep-412-in-jdk17-with-libsodium/[A practical look at JEP-412]
+* https://docs.oracle.com/en/java/javase/14/vm/class-data-sharing.html[Application Class-Data Sharing]
+* http://www.oracle.com/pls/topic/lookup?ctx=javase14&id=dynamic_CDS_archive[Dynamic CDS Archive]
+* https://blogs.oracle.com/javamagazine/understanding-the-jdks-new-superfast-garbage-collectors[Understanding the JDK’s New Superfast Garbage Collectors]
 
-.OpenJDK Suppliers
-* x
+.Tools
+* http://jdk.java.net/jmc/[JDK Mission Control]
 
 .Weiterführendes
 * https://www.youtube.com/watch?v=B8k9QGvPxC0[State of Project Panama]
+
 
 .Tools
 * https://www.graalvm.org/[GraalVM]

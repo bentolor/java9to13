@@ -4,7 +4,9 @@
    - bgdark: #745d4840   - vdark: #33291f  
  */
 
-
+section .underline {
+  text-decoration: underline !important;
+}
 
 /* --------------------------------------------------- general settings */
 /* more decent background parallax image */
@@ -46,14 +48,14 @@ SECTION.bonuscontent H2::before {
 }
 
 SECTION .title {
+  font-size: 2.6rem;
   font-family: "Quicksand", sans-serif;
-  font-weight: bold; 
-  font-size: 0.8em;
-  line-height: 0.9em; 
   text-decoration: underline;
-  margin-bottom: -.4rem;
-  margin-top: 1.2rem;
-  color: #33291fe0
+  text-transform: uppercase;
+  line-height: 1em; 
+  margin-bottom: -.2rem;
+  margin-top: 2rem;
+  color: #3a2104cc
 }
 
 
@@ -236,7 +238,8 @@ SECTION .title {
   }
 
 .reveal section.degrade h2 {
-  text-transform: none;
+  /* text-transform: none; */
+  font-size: 1.6em;
 }
 
 /* No blue links */
