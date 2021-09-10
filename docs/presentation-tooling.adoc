@@ -1,7 +1,7 @@
-[.lightbg,background-video="videos/hammer.mp4",background-video-loop="true",background-opacity="0.7"]
+[.lightbg,background-video="hammer.mp4",background-video-loop="true",background-opacity="0.7"]
 == Tooling
 
-[%notitle,background-video="videos/jshell-demo.mp4",background-size="contain"]
+[%notitle,background-video="jshell-demo.mp4",background-size="contain"]
 === REPLS: `jshell` [jep]#https://openjdk.java.net/jeps/222[JEP 222]#
 
 
@@ -260,7 +260,7 @@ JAR Files can now contain multiple, version-specific versions classes
 --
 
 
-[.bonuscontent]
+
 === HTML5 Javadoc [jep]#https://openjdk.java.net/jeps/221[JEP 221]# [jep]#https://openjdk.java.net/jeps/224[JEP 224]# [jep]#https://openjdk.java.net/jeps/225[JEP 225]#  
 
 
@@ -270,7 +270,7 @@ JAR Files can now contain multiple, version-specific versions classes
 - Improved DocLint: `-Xdoclint/package:java.*,javax.*`
 
 
-[.bonuscontent]
+
 === Performance
 
 .Compact Strings [jep]#https://openjdk.java.net/jeps/254[JEP 254]#

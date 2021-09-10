@@ -1,4 +1,4 @@
-[.lightbg,background-video="videos/coffee-beans.mp4",background-video-loop="true",background-opacity="0.7"]
+[.lightbg,background-video="coffee-beans.mp4",background-video-loop="true",background-opacity="0.7"]
 == Java 9--13 in a nutshell
 
 === v9 (huge…)

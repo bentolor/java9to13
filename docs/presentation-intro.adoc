@@ -38,7 +38,7 @@ What happened? You all heard of it!
 --
 
 
-[.decentlightbg,background-video="videos/fog-hands.mp4",background-video-loop="true",background-opacity="0.6"]
+[.decentlightbg,background-video="fog-hands.mp4",background-video-loop="true",background-opacity="0.6"]
 === » Everything-is-so-awful™ « 
 
 // ggf. 4-teiliges fragment: 
@@ -76,7 +76,7 @@ Aus Projekten: Kenne ich die Prävalenz von Java 8 und älter.
 
 
 
-[.lightbg,background-video="videos/flowers.mp4",background-video-loop="true",background-opacity="0.6"]
+[.lightbg,background-video="flowers.mp4",background-video-loop="true",background-opacity="0.6"]
 //[transition="fade-out"]
 === Love, peace & happiness…
 
@@ -118,8 +118,8 @@ Aus Projekten: Kenne ich die Prävalenz von Java 8 und älter.
 
 
 
-[.bonuscontent]
-[.lightbg.degrade,background-video="videos/flowers.mp4",background-video-loop="true",background-opacity="0.6"]
+
+[.lightbg.degrade,background-video="flowers.mp4",background-video-loop="true",background-opacity="0.6"]
 //[transition="zoom-out"]
 === OpenJDK Suppliers
 //=== Love, peace & happiness…
@@ -137,7 +137,7 @@ Aus Projekten: Kenne ich die Prävalenz von Java 8 und älter.
 
 
 
-[background-video="videos/flowers.mp4",background-video-loop="true",background-opacity="0.6"]
+[background-video="flowers.mp4",background-video-loop="true",background-opacity="0.6"]
 [.degrade,transition="zoom-in convex-out"]
 === `tl;dr`: AdoptOpenJDK
 image:adopt-openjdk-entry.png[AdoptOpenJDK,width=950] +
@@ -147,7 +147,7 @@ image:adopt-openjdk-entry.png[AdoptOpenJDK,width=950] +
 * `tl;dr` – pick AdoptOpenJDK
 --
 
-[background-video="videos/flowers.mp4",background-video-loop="true",background-opacity="0.6"]
+[background-video="flowers.mp4",background-video-loop="true",background-opacity="0.6"]
 [.degrade,transition="convex-in"]
 === AdoptOpenJDK – Sponsors
 image::adopt-openjdk-sponsors.png[AdoptOpenJDK Sponsors]
@@ -157,7 +157,7 @@ image::adopt-openjdk-sponsors.png[AdoptOpenJDK Sponsors]
 --
 
 
-[background-video="videos/flowers.mp4",background-video-loop="true",background-opacity="0.6"]
+[background-video="flowers.mp4",background-video-loop="true",background-opacity="0.6"]
 [.degrade,transition="convex-in convex-out"]
 === AdoptOpenJDK – Plattforms
 image::adopt-openjdk-plattforms.png[AdoptOpenJDK Plattforms]
@@ -167,8 +167,8 @@ image::adopt-openjdk-plattforms.png[AdoptOpenJDK Plattforms]
 --
 
 
-[.bonuscontent]
-[background-video="videos/flowers.mp4",background-video-loop="true",background-opacity="0.6"]
+
+[background-video="flowers.mp4",background-video-loop="true",background-opacity="0.6"]
 [.degrade,transition="convex-in convex-out"]
 === AdoptOpenJDK – Support Timelines
 image::adopt-openjdk-support.png[AdoptOpenJDK Support Table]

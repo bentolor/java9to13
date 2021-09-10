@@ -15,7 +15,7 @@
 
 
 
-[.lightbg,background-video="videos/industrial.mp4",background-video-loop="true",background-opacity="0.6"]
+[.lightbg,background-video="industrial.mp4",background-video-loop="true",background-opacity="0.6"]
 == Resources
 
 [.col3-l.xx-small]
@@ -78,7 +78,7 @@ image:bentolor-java913-url-qrcode.png[https://bentolor.github.io/java9to13/] +
 
 
 
-[.bonuscontent]
+
 === Cleanups
 
 [.col2.x-small]
@@ -113,7 +113,7 @@ image:bentolor-java913-url-qrcode.png[https://bentolor.github.io/java9to13/] +
 *    Deprecate Pack200
 --
 
-[.bonuscontent]
+
 === Security / TLS / Crypto
 
 *    Validate Incoming Serialization Data
@@ -154,7 +154,7 @@ image:bentolor-java913-url-qrcode.png[https://bentolor.github.io/java9to13/] +
 *  ChaCha20 and Poly1305 Cryptographic Algorithms
     JDK 11
     
-[.bonuscontent]    
+    
 === Internationalization
  
 * ResourceBundle loads properties files _by default_ in UTF-8 instead of ISO-8859-1. + 
@@ -163,7 +163,7 @@ image:bentolor-java913-url-qrcode.png[https://bentolor.github.io/java9to13/] +
 * java.util.Locale and related APIs support currency type, time zone and more. [jep]#https://openjdk.java.net/jeps/314[JEP 314]#
 * `Locale`-specific operations now uses by default data provided by Unicode, no longer Oracle-provided. [jep]#https://openjdk.java.net/jeps/252[JEP 252]#
 
-[.bonuscontent]
+
 === .Graphics and Desktop Applications
 
 *    Desktop features for all platforms like login/logout/lock event listener and task bar interactions

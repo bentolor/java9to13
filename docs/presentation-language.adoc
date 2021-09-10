@@ -1,4 +1,4 @@
-[.lightbg,background-video="videos/woman-study.mp4",background-video-loop="true",background-opacity="0.7"]
+[.lightbg,background-video="woman-study.mp4",background-video-loop="true",background-opacity="0.7"]
 == Language
 
 === Local Variable Type Inference [jep]#https://openjdk.java.net/jeps/286[JEP 286]#
@@ -71,7 +71,7 @@ var myPredicate = new IntPredicate() {
 
 
 
-[.bonuscontent]
+
 === Lambda Type inference [jep]#https://openjdk.java.net/jeps/323[JEP 323]#
 
 [source,java]
@@ -86,7 +86,7 @@ myLambda = (var x, @NotNull var y) -> x + y;
 
 === Type inference: Styleguide
 
-video::../videos/type-infer-styleguide.mp4[Style Guidelines for Local Variable Type Inference in Java]
+video::type-infer-styleguide.mp4
 
 [.refs]
 --
@@ -355,7 +355,7 @@ java  -mp modulepath -m modulename/moduleclass
 * *Either-Or!* You stay in classpath/JAR mode oder switch to modules /jmod
 --
 
-[.bonuscontent]
+
 === `ServiceLoader` & modules
 
 [source,java]

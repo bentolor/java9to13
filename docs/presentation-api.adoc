@@ -1,4 +1,4 @@
-[.lightbg,background-video="videos/keyboard.mp4",background-video-loop="true",background-opacity="0.7"]
+[.lightbg,background-video="keyboard.mp4",background-video-loop="true",background-opacity="0.7"]
 == API
 
 
@@ -76,7 +76,7 @@ long firstMismatch = Files.mismatch(txtPath, newPath); // → 8  | JDK12   <4>
 
 
 
-[.bonuscontent]
+
 === Stream Enhancements
 1. *Transform* with `dropWhile()` & `takeWhile()`
 2. *Generate* with `iterate()` & `ofNullable()`)
@@ -275,7 +275,7 @@ class org/apache/commons/math3/util/Precision uses deprecated method java/math/B
 
 
 
-[.bonuscontent]
+
 === StackWalker
 
 [source,java]
@@ -322,7 +322,7 @@ future.get();              // wait for completion of the background request
 * Support for Proxying, Cookies, Authentication
 --
 
-[.bonuscontent]
+
 === WebSocket client
 
 [source,java]
@@ -346,7 +346,7 @@ websocket.sendClose(NORMAL_CLOSURE, "Goodbye!").join();
 ----
 
 
-// [.bonuscontent]
+// 
 // === Reflection Access
 //
 // .Concurrent `VarHandle`
@@ -412,7 +412,7 @@ They will receive `PhantomReference` to objects which are no longer reachable.
 // === Arrays.mismatch
 
 
-[.bonuscontent]
+
 === String enhancements
 
 .Java 11: Adopting new `Character.isWhitespace()` 
@@ -448,7 +448,7 @@ IntStream stream = "word".chars();
 
 
 [.small]
-[.lightbg,background-video="videos/api-diff-scroll.mp4",background-opacity="0.6"]
+[.lightbg,background-video="api-diff-scroll.mp4",background-opacity="0.6"]
 === icon:tags[] JDK API Changes
 
 link:https://github.com/marchof/java-almanac[JDK API Changes Java Almanac]

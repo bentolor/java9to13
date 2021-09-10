@@ -1,4 +1,4 @@
-[.lightbg,background-video="videos/relaxing.mp4",background-video-loop="true",background-opacity="0.7"]
+[.lightbg,background-video="relaxing.mp4",background-video-loop="true",background-opacity="0.7"]
 == Agenda
 
 1. Java 9--13 Overview

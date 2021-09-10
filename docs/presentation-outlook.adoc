@@ -1,4 +1,4 @@
-[.lightbg,background-video="videos/prediction.mp4",background-video-loop="true",background-opacity="1"]
+[.lightbg,background-video="prediction.mp4",background-video-loop="true",background-opacity="1"]
 == Java 14 & beyond 
 
 //[%notitle,background-image="graalvm-architecture.png"]

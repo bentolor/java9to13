@@ -48,8 +48,9 @@ SECTION.bonuscontent H2::before {
 SECTION .title {
   font-family: "Quicksand", sans-serif;
   font-weight: bold; 
+  font-size: 0.8em;
+  line-height: 0.9em; 
   text-decoration: underline;
-  line-height: 1em; 
   margin-bottom: -.4rem;
   margin-top: 1.2rem;
   color: #33291fe0
