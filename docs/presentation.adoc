@@ -19,8 +19,10 @@
 :revealjs_autoPlayMedia: true
 :revealjs_defaultTiming: 42
 //:revealjs_transitionSpeed: fast
-:revealjs_parallaxBackgroundImage: images/background-landscape-light-orange.jpg
-:revealjs_parallaxBackgroundSize: 4936px 2092px
+//:revealjs_parallaxBackgroundImage: images/background-landscape-light-orange.jpg
+//:revealjs_parallaxBackgroundSize: 4936px 2092px
+:revealjs_parallaxBackgroundImage: images/what-s-under-the-hood-1560145-light.jpg
+:revealjs_parallaxBackgroundSize: 5000px 3376px
 :customcss: css/presentation.css
 :imagesdir: images
 :source-highlighter: highlightjs
@@ -31,43 +33,61 @@
 
 
 
-== Motor-Upgrade: 3 Kleinigkeiten
-=== Exception Error
-=== Schnellere GC
-=== Einfachere CDS / JFR Zeitreisen?
+// [.lightbg, background-image="327-chevy-engine-1542516.jpg",background-opacity="0.9"]
+== 3 Motor-Upgrades
+[decent]#… auf die ich mich in Java 17 freue#
 
-
-[.lightbg,background-video="coffee-beans.mp4",background-video-loop="true",background-opacity="0.7"]
-== Java 12--17 in a nutshell
-
-=== v9 (huge…)
-
-* *Java module (Jigsaw)*
-* *API Improvements:* _Project Coin Milling_, Stream, … 
-* *Unified JVM & Java Logging*, …
-//  Reflection, Date, Concurrency, …
-// * _Deprecated:_ `finalize()` 
-* *Performance*
-* _Tools:_ `jshell` `jlink` `-release`, Multi-Release JARs
-//* _New platforms:_ *AArch64, s390x, Arm32/Arm64*
-
-[decent]#2017-03-23, icon:exclamation-circle[] http://openjdk.java.net/projects/jdk9/[*91* JEPs]#
-
-=== Recap
-
-> Auch Blick unter die Haube lohnt sich; manche transaprent & für alle; manche muss man sich erschließen
+[.lightbg.forcebottom,background-video="time-passes-by-so-quickly.mp4",background-video-loop="true",background-opacity="1"]
+=== Mehr _Schwuppidizität_
 [.notes]
 --
-* Viele Änderungen unter der Haube
-* Einige auch nicht so präsent, z.B. Shennandoah GC
-* Blick unter die "Haube", also JVM, Tools und JVM Internals
+… durch _niedriglatente GCs_ und schnellere JVM Start zur _Class-Data Sharing_
 --
+
+
+[.lightbg.forcebottom,background-video="pexels-cottonbro-9293441.mp4",background-video-loop="true",background-opacity="1"]
+=== Mehr Durchblick
+
+
+[.lightbg.forcetop,background-video="pexels-koolshooters-7327408.mp4",background-video-loop="true",background-opacity="1"]
+=== Mehr Hilfestellung
+[.notes]
+--
+… z.B. durch _sprechende Nullpointer-Exceptions_ und bessere JVM Defaults
+--
+
+
+
+
+// [.lightbg,background-video="coffee-beans.mp4",background-video-loop="true",background-opacity="0.7"]
+// == Java 12--17 in a nutshell
+
+// === v9 (huge…)
+// * *Java module (Jigsaw)*
+// * *API Improvements:* _Project Coin Milling_, Stream, … 
+// * *Unified JVM & Java Logging*, …
+// //  Reflection, Date, Concurrency, …
+// // * _Deprecated:_ `finalize()` 
+// * *Performance*
+// * _Tools:_ `jshell` `jlink` `-release`, Multi-Release JARs
+// //* _New platforms:_ *AArch64, s390x, Arm32/Arm64*
+
+// [decent]#2017-03-23, icon:exclamation-circle[] http://openjdk.java.net/projects/jdk9/[*91* JEPs]#
+
+// === Recap
+// > Auch Blick unter die Haube lohnt sich; manche transaprent & für alle; manche muss man sich erschließen
+// [.notes]
+// --
+// * Viele Änderungen unter der Haube
+// * Einige auch nicht so präsent, z.B. Shennandoah GC
+// * Blick unter die "Haube", also JVM, Tools und JVM Internals
+// --
 
 
 [.lightbg,background-video="relaxing.mp4",background-video-loop="true",background-opacity="0.7"]
 == Agenda
 1. Native
-//** Vector API
+// Vector API
 //** Native Memory/Function
 2. Diagnostik
 //** JFR / JMC
@@ -75,9 +95,297 @@
 4. Tools
 5. Details & Maintenance
 
-== Native
 
-== Vector API
+// == Vector API
+// https://openjdk.java.net/jeps/414
+
+// [.notes]
+// --
+// ntegrated into JDK 16 as an incubating API, the platform-agnostic vector API will be incubated again in JDK 17, providing a mechanism to express vector computations that reliably compile at run time to optimal vector instructions on supported CPU architectures. This achieves better performance than equivalent scalar computations. In JDK 17, the vector API has been enhanced for performance and implementation, including enhancements to translate byte vectors to and from boolean arrays.
+// --
+
+
+
+
+== Garbage Collectoren
+
+[.degrade.x-small]
+=== Timeline
+[width=60%,grid=vertical,frame=none,cols="^1e,5"]
+|===
+|11 | [decent]#icon:vial[]# ZGC Experimental
+|12 | [decent]#icon:vial[]# Shenandoah Experimental +
+      [decent]#icon:compress-alt[] G1 Uncommit Memory# +
+      [decent]#icon:undo[] ZGC Class Unloading#
+|13 | [decent]#icon:compress-alt[] ZGC Uncommit Memory# 
+|14 | icon:windows[] & icon:apple[] ZGC Support +
+      icon:trash[] CMS Removal +
+      [decent]#icon:bomb[] ParalellOldGC Deprecation#       
+|15 | icon:award[] **Shenandoah** Production-ready +
+      icon:award[] **ZGC** Production-ready
+|16 | [decent]#icon:chart-line[] ZGC Improvements#
+|===
+
+
+
+=== Die neue Generation der Low-Latency GCs
+
+// .Gemeinsamkeiten ZGC & Shennadoah
+* Moderne Architekturen: _Multi-Core_ & _TB RAM_
+* _kurze GC Pausen_ im ms-Bereich +
+  → erkauft **Responsiveness** gegen _Durchsatz_
+* (fast) vollständig _parallel & nebenläufig_ +
+  Pausen unabhängig von Größe des Heaps
+* Unterstützen _Class Unloading_ & _Uncommit Memory_
+* Einfach & Konfigurationsarm 
+
+[.notes]
+--
+* _Multi-Core_ & _TB RAM_
+* Ziel ist immer **niedrige Latenz**
+* bei G1 & Co gerne mal 200~500ms; hier: 1-10ms;
+* Schnellere Reaktion geringere Gesamtdurchsatz & Damit längere Laufzeit
+--
+
+
+
+=== Z Garbage Collector (ZGC)
+
+[col2]
+--
+image:in_place_relocation2.svg[width=600,role=plain]
+
+`-XX:+UseZGC`
+--
+
+[col2.small]
+--
+_„A scalable low-latency garbage collector“_
+
+.Ziele
+* GC Pausen kleiner [deleted]#10ms# **1ms**
+* Durchsatz max. -15% gegenüber G1
+* Heapgrößen  8MB – **16TB**
+* Einfaches Tuning
+
+[emphasize]#_Colored Pointers & Load Barriers_ + 
+→ Object Relocation#
+--
+
+[.refs]
+--
+https://wiki.openjdk.java.net/display/zgc/Main
+--
+
+[.notes]
+--
+* Aus dem Hause _Oracle_; ehemals kommerziell
+* Pausen auch unabhängig Live- & Root-Set
+* Production since JDK 15; dann auch mit Linux/Win/macOS
+* Nebenläufig, Regionen-basiert, ohne Generation, _Compacting_ und _NUMA-aware_
+* Konzept: _Colored pointers_ plus _Load barriers_ → Relocation
+* "Schwuppizität" zum Preis von CPU und Gesamtlaufzeit
+--  
+
+[.left]
+=== Shennadoah GC
+
+_„A low-pause-time garbage collector by concurrent evacuation work“_ +
+
+[col2.small]
+--
+* ZGC sehr ähnlich _Brooks (Forward) Pointers_ 
+
+* Bietet verschieden Modi & Heuristic-Profile: 
+  _adaptive, static, compact, aggressive_
+
+* Beil zahlreichen Weak References → ZGC
+
+--
+
+[col2.small]
+--
+* **Red Hat** Kind → andere Service Offerings
+
+* **Backports** für JDK 8 & 11; auch **32-bit**
+
+* ggü. ZGC: abhängig von Root- & Live-Set
+ 
+[x-small]#`-XX:+UseShenandoahGC`#
+--
+
+[.center]
+
+image:shenandoah-gc-cycle.png[role=plain, width=1000]
+
+
+[.refs]
+--
+https://wiki.openjdk.java.net/display/shenandoah
+--
+
+[.notes]
+--
+* Name nach US Nationalpark
+* von Red Hat → auch Backports & Architekturen (z.B. ARM32)
+* seit 2013 und seit v12 im JDK; seit JDK15 Production
+* Pausen steigen mit Root Set / Live Set
+--
+
+
+
+
+[%notitle,background-image="gc-performance-transparent.png",background-size="contain"]
+=== Performance G1 vs. ZGC vs. Shenandoah
+[.notes]
+--
+* Arbeitsbereich ist links! Rechts = Überlast
+* S & Z : Vergleichbare, gegenüber G1 deutlich niederige Latenzen
+* Verhalten bei wachsender Last: Hier scheint ZGC irgendwann den Punkt zu erreichen wo es nicht mehr mithalten kann; bei Shenandoah früher Latenz
+* Man sieht klar: G1 ist Tradeoff zwischen Latenz & Durchsatz → auch bei höhere Durchsatz stabil
+--
+
+
+
+
+
+
+
+
+
+
+[.degrade]
+=== GC in der Übersicht
+
+[.x-small,cols=">1e,^2,7",grid="horizontal",frame="none"]
+|===
+|GC | Optimiert für… | Kommentar
+
+| G1
+| Balance
+| Üblicher Default. Überwiegend Nebenläufig. Zielt auf Balance von Durchsatz & Latenz. Außreißer-Pausen bis 250~800ms. Guter Durchsatz. Häppchenweise Pausen an Zeitbudget orientiert.
+
+| Shenandoah
+| Latenz
+| Auch verfügbar für JDK8, JDK11 und 32-bit.
+
+| ZGC
+| Latenz
+| besser für `WeakRef`; Pausen auch unabhängig Live- und Root-Set
+
+| ParallelGC
+| Durchsatz
+| Parallel & mehrere Threads. Hoher Durchsatz. +
+  Typische Pausen ~300ms abhängig von Heap-Größe.
+
+| SerialGC
+| Speicherbedarf
+| Single-Threaded. Empfiehlt sich nur für Heaps ~100MB.
+
+| Zing/Azul
+| Pauseless
+| Nicht im OpenJDK; nur kommerziell verfügbar
+
+|===
+
+
+
+
+[.degrade]
+=== Überblick Änderungen GC's
+
+[col3-c.x-small]
+--
+.ZGC
+* Concurrent Class Unloading [version]#12#
+* Uncommit Unused Memory [jep]#https://openjdk.java.net/jeps/351[JEP 351]# [version]#13#
+* `-XXSoftMaxHeapSize` Flag [version]#13#
+* Max. Heap Size Increased to 16TB [version]#13#
+* ZGC on macOS [jep]#https://openjdk.java.net/jeps/364[JEP 364]# [version]#14# 
+* ZGC on Windows [jep]#https://openjdk.java.net/jeps/365[JEP 365]# [version]#14# 
+* ZGC Production-Ready [jep]#https://openjdk.java.net/jeps/377[JEP 377]# [version]#15#
+* Concurrent Stack Processing [jep]#https://openjdk.java.net/jeps/376[JEP 376]# [version]#16#
+
+.Epsilon
+* Epsilon Bug TLABs extension [version]#14#
+* Epsilon warns about Xms/Xmx/… [version]#14#
+--
+[col3-l.x-small]
+--
+
+.G1
+* [.step.highlight-current-blue]#OldGen on NV-DIMM# [version]#12#
+* [.step.highlight-current-blue]#Uncommit Memory# [version]#12#
+* Improved Sparse PRT Ergonomics [version]#13#
+* NUMA-Aware Memory Alloc. [jep]#https://openjdk.java.net/jeps/354[JEP 354]# [version]#14#
+* Improved Heap Region Ergonomics [version]#15#
+* Concurrently Uncommit Memory [version]#16#
+
+.Shenandoah
+* Shenandoah (Experimental)  [jep]#https://openjdk.java.net/jeps/189[JEP 189]# [version]#12#
+* Self-fixing barriers [version]#14#
+* Async. object/region pinning [version]#14#
+* Concurrent class unloading [version]#14#
+* Arraycopy improvements [version]#14#
+* Shenandoah Production-Ready [jep]#https://openjdk.java.net/jeps/379[JEP 379]# [version]#15#
+
+--
+[col3-r.x-small]
+--
+
+.Bugfixes
+* Disable large pages on Windows [version]#15#
+* Disable NUMA Interleaving on Win.[version]#15#
+
+
+.Legacy
+* [.step.highlight-current-red]#ParallelGC Improvements# [version]#14#
+* Obsolete [x-small]#`-XXUseAdaptiveGCBoundary`# [version]#15#
+* Enable Parallel Ref. Processing [version]#17#
+* SerialGC Improved young report [version]#13#
+* ParalellOldGC: Deprecate [jep]#https://openjdk.java.net/jeps/366[JEP 366]# [version]#14#
+* [.step.highlight-current-red]#CMS: Remove CMS GC# [jep]#https://openjdk.java.net/jeps/363[JEP 363]# [version]#14#
+
+[.step.highlight-current-red]#icon:exclamation-triangle[] Many, many, more…#
+--
+
+[.notes]
+--
+. Old Gen auf alternativen Memory Geräten
+. G1 kann wieder Speicher freigeben
+. Auch ParallelGC erfährt Verbesserungen
+. CMS wurde entfernt
+. → Viel mehr; teils nicht in den Release Notes
+--
+
+
+=== TL;DR Tipps für den GC
+
+[%step]
+Upgrade lohnt sich!
+
+[%step]
+Probieren geht über Studieren!
+
+[%step]
+Mut zum (probeweisen) Wegwerfen: +
+Alte Tuning-Parameter
+
+[%step]
+Latenz wichtig? → ZGC oder Shenandoah
+
+
+[.refs]
+--
+https://blogs.oracle.com/javamagazine/understanding-the-jdks-new-superfast-garbage-collectors
+https://docs.oracle.com/en/java/javase/17/gctuning/available-collectors.html
+--
+
+
+
+
+
+
 
 
 == Class Data Sharing 
@@ -133,7 +441,7 @@ $ java -XX:ArchiveClassesAtExit=myapp.jsa -cp myapp.jar MyApp
 [%notitle]
 === AppCDS Gewinne
 image::app_cds_time_to_first_response.png[AppCDS Startup Times,height=700]
-[.refs.xx-small]
+[.refs]
 --
 Quelle: https://www.morling.dev/blog/building-class-data-sharing-archives-with-apache-maven/
 --
@@ -145,157 +453,6 @@ Quelle: https://www.morling.dev/blog/building-class-data-sharing-archives-with-a
 --
 
 
-== GraalVM
-=== Überblick & Stand
-* Polyglott VM
-* SubstrateVM: AoT Compiler
-* GraalVM Community & Enterprise
-
-//[%notitle,background-image="graalvm-architecture.png"]
-=== Project Metropolis
-image::graalvm-architecture.png[GraalVM ecosystem]
-
-[.notes]
---
-* Polyglot VM: Execute multiple language with zero overhead
-* Can run in multiple environments; Can produce native images
-* Zero-overhead interop
---
-
-=== GraalVM -- Polyglot VM [jep]#https://openjdk.java.net/jeps/243[JEP 243]# [jep]#https://openjdk.java.net/jeps/246[JEP 246]# [jep]#https://openjdk.java.net/jeps/295[JEP 295]#
-[.col2]
---
-* *Ahead-of time compiler* (AoT)
-* Generic VM +
- for *different languages* +
-→ _JVM_ (Java, Kotlin, Scala, …) +
-→ _LLVM_ (C, C++) → native +
-→ _Java_ Script, Python, Ruby, R
---
-[.col2]
---
-* Shared Runtime → Zero overhead for language interop
-* *Native executables* +
-  (GraalVM on SubstrateVM) +
-  → Much smaller startup & memory
---
-[.clear.decent]
---
-.AoT can be used today:
-[.x-small]#`java -XX:+UnlockExperimentalVMOptions -XX:+EnableJVMCI -XX:+UseJVMCICompiler`#
---
-[.notes]
---
-* Multiple parts:
-** AoT Compiler
-** Graal VM / Substrate VM as runtime
-* AoT → improved startup time vs. JIT
-* Limitations: Dynamic (Reflection); highly experimental
-* AoT Compile can be used today
---
-
-=== Frameworks
-* Helidon, Quarkus.io, Micronaut, (?Spring Fu, Javalin, Ktor, Vert.x)
-* zielen auf GraalVM AoT Compilation & Microservices
-* z.B. Dependency Resolver zur Compiletime via Annotation Processing vs. Laufzeit
-* Java CLI native image
-
-=== Demo
-* xxx
-
-== Memory Management
-=== Überblick Änderungen GC 
-* ZGC Concurrent Class Unloading [version]#12#
-* ZGC Uncommit Unused Memory [jep]#https://openjdk.java.net/jeps/351[JEP 351]# [version]#13#
-* ZGC on macOS [jep]#https://openjdk.java.net/jeps/364[JEP 364]# [version]#14# 
-* ZGC on Windows [jep]#https://openjdk.java.net/jeps/365[JEP 365]# [version]#14# 
-* ZGC Production-Ready [jep]#https://openjdk.java.net/jeps/377[JEP 377] #[version]#15#
-* ZGC -XXSoftMaxHeapSize Flag  [version]#13#
-* ZGC Maximum Heap Size Increased to 16TB [version]#13#
-* ZGC Concurrent Stack Processing [jep]#https://openjdk.java.net/jeps/376[JEP 376]  [version]#16#
-* Allocation of Old Generation of Java Heap on Alternate Memory Devices [version]#12#
-* G1 May Uncommit Memory During Marking Cycle [version]#12#
-* G1 Improve Ergonomics for Sparse PRT Entry Size [version]#13#
-* Serial GC Improvements in Young pause time report [version]#13#
-* Parallel GC Improvements [version]#14#
-* NUMA-Aware Memory Allocation for G1 [jep]#https://openjdk.java.net/jeps/354[JEP 354] [version]#14#
-* CMS: Remove Concurrent Mark and Sweep GC [jep]#https://openjdk.java.net/jeps/363[JEP 363] [version]#14#
-* ParallOldGC: Deprecate SerialOld [jep]#https://openjdk.java.net/jeps/366[JEP 366] [version]#14#
-* Shenandoah self-fixing barriers [version]#14#
-*  Epsilon warns about Xms/Xmx/AlwaysPreTouch configuration [version]#14#
-* Shenandoah asynchronous object/region pinning [version]#14#
-* Shenandoah: A Low-Pause-Time Garbage Collector (Production [jep]#https://openjdk.java.net/jeps/379[JEP 379] [version]#15#
-* Epsilon does not extend TLABs to max size [version]#14#
-* Shenandoah supports concurrent class unloading [version]#14#
-* Shenandoah arraycopy improvements [version]#14#
-* ParallelGC Obsolete -XXUseAdaptiveGCBoundary [version]#15#
-* G1 Improved Ergonomics for Heap Region Size [version]#15#
-* Bug: Disabling large pages on Windows [version]#15#
-* Bug: Disabling NUMA Interleaving on Windows [version]#15#
-* G1 Concurrently Uncommit Memory [version]#16#
-* ParallelGC Enables Adaptive Parallel Reference Processing by Default  [version]#17#
-* Shenandoah: A Low-Pause-Time Garbage Collector (Experimental)  [jep]#https://openjdk.java.net/jeps/189[JEP 189] [version]#12#
-
-
-[.notes]
---
-* The Z Garbage Collector now supports class unloading.
-* Experimental feature in G1 & Parallel GC allows OldGen on NV-DIMM memory.
-* G1 may now give back Java heap memory to the operating system during any concurrent mark cycle.
---
-
-=== GC: ZGC
- Z Garbage Collector (ZGC):: 
-  * A scalable low-latency garbage collector. 
-  * Motivation: long GC pauses for app responses
-  * Goals: Pauses <10ms, typical 2ms
-  * Less 15% Throughput drop vs. G1
-  * Heap 8MB~16TB, Linux/Win/macOS
-  * _"Colored Pointers"_ → Object Relocation
-  * Enable: `-XX:+UseZGC`
-  * Production since JDK 15
-
-=== GC: Shennadoah
-
-Shenandoah::
-  * A Low-Pause-Time Garbage Collector by concurrent evacuation work
-  * Pause times with Shenandoah are independent of heap size
-  * appropriate if priority on responsiveness and predictable short pauses
-  * trades concurrent cpu cycles and space for pause time improvements
-  * Intro in JDK 12
-  * Production since JDK 15
-  * `-XX:+UseShenandoahGC`
-
-=== GC: Vergleich
-
-* Shenandoah: Pause times with Shenandoah are independent of heap size. Trades concurrent cpu cycles and space for pause time improvements.
-
-* Zing/Azul has a pauseless collector, however that work has not been contributed to OpenJDK.
-
-* ZGC has a low pause collector based on colored pointers. We look forward to comparing the performance of the two strategies.
-
-* G1 mostly concurrent, but it does not do concurrent evacuation. Strategy: "slice up GC pauses according to a user-supplied time target". Will be selected by on most hardware. Pauses: 250ms~850ms. High throughput
-
-* CMS does concurrent marking, but it performs young generation copying at pause times, and never compacts the old generation. 
-
-.Alte GCs
-
-Pausen steigen mit wachsenden Heaps
-
-* SerialGC:  all GC work on a single thread. Nur bis ~100MB Heap empfohlen.
-
-* ParallelGC selects the parallel (throughput) collector, which can perform compaction using multiple threads. Pauses: 200~300ms. Hocher durchsatz
-
-=== GC: G1 & andere
-=== Fazit
-* ggf. Performance Vergleich o.ä.
-* G1 gibt Speicher schneller frei
-
-[.notes]
---
-https://blogs.oracle.com/javamagazine/understanding-the-jdks-new-superfast-garbage-collectors
-https://docs.oracle.com/en/java/javase/17/gctuning/available-collectors.html
---
 
 
 == JDK Flight Recorder (JFR)
@@ -306,8 +463,7 @@ https://docs.oracle.com/en/java/javase/17/gctuning/available-collectors.html
 * built-in & jederzeit aktivierbar
 * always-on möglich → Timemachine
 
-[.emphasize.fragment]
-→ icon:cogs[] **Production** Profiling & Monitoring
+→ [.step.highlight-current-red]#icon:cogs[] **Production** Profiling & Monitoring#
 
 [.decent.x-small]
 
@@ -370,7 +526,7 @@ Optionen: `filename`, `delay`, `dumponexit`, `duration`, `maxage`, `maxsize`, �
 
 [%notitle,background-video="jmc.mp4",background-video-loop="false",background-size="contain"]
 === JDK Mission Control (JMC)
-[.refs.xx-small]
+[.refs]
 --
 https://openjdk.java.net/projects/jmc/8/
 --
@@ -528,19 +684,8 @@ Timeshift-Analyse::
 Recording mitlaufen lassen und bei Performance-Problemen rückwirkend seit Problemstartpunkt aus dem JFR Event Repository extrahieren & analysieren (_„Timeshift“_)
 
 
-
-
-== JVM Diagnostics
-
-* `-XX:+ExtensiveErrorReports` → ausführlichere Crash-Reports in `hs_err<pid>.log`
-* Asynchrones _Unified JVM Logging_ erzwingen`-Xlog:async` und `-XX:AsyncLogBufferSize=<bytes>` über separaten Thread
-
-[.notes]
---
-* To avoid undesirable delays in a thread using unified JVM logging, you now can request that the unified logging system operate in asynchronous mode by using the -Xlog:async command-line option. In asynchronous logging mode, all logging messages are queued to a buffer, and a standalone thread is responsible for flushing them to the corresponding outputs. The intermediate buffer is bounded; on buffer exhaustion, the enqueuing message is discarded. 
---
-
 == Misc
+
 
 === Bessere Nullpointers [jep]#https://openjdk.java.net/jeps/358[JEP 358]#
 
@@ -570,7 +715,27 @@ Exception in thread "main" java.lang.NullPointerException: Cannot invoke <mark>"
 * Erforderte früher `-XX:+ShowCodeDetailsInExceptionMessages`, nun default!
 --
 
-=== Preview features [preview]#Preview# [jep]#https://openjdk.java.net/jeps/12[JEP 12]#
+
+
+=== JVM Diagnostics
+
+* `-XX:+ExtensiveErrorReports` → ausführlichere Crash-Reports in `hs_err<pid>.log`
+* Asynchrones _Unified JVM Logging_ erzwingen `-Xlog:async` und `-XX:AsyncLogBufferSize=<bytes>` über separaten Thread
+
+[.notes]
+--
+* To avoid undesirable delays in a thread using unified JVM logging, you now can request that the unified logging system operate in asynchronous mode by using the -Xlog:async command-line option. In asynchronous logging mode, all logging messages are queued to a buffer, and a standalone thread is responsible for flushing them to the corresponding outputs. The intermediate buffer is bounded; on buffer exhaustion, the enqueuing message is discarded. 
+--
+
+
+
+== Foreign Function & Memory API [preview]#Incubator# 
+// [jep]#https://openjdk.java.net/jeps/412[JEP 412]#
+
+
+
+[.degrade]
+=== Exkurs: Preview features [preview]#Preview# [jep]#https://openjdk.java.net/jeps/12[JEP 12]#
 Auslieferung experimenteller Sprach- und JVM-Features, +
 oft in Iterationen, zur Förderung von frühem Community Feedback. +
 [.decent.x-small]#_z.B.: Pattern Matching, Switch Expression, Text Blocks, Records, Sealed Classes_#
@@ -603,7 +768,9 @@ java --enable-preview …
 * Stabilisierung auf LTS; in 17 LTS daher kein Preview Feature
 --
 
-=== Incubator Modules [preview]#Incubator# [jep]#https://openjdk.java.net/jeps/11[JEP 11]#
+
+[.degrade]
+=== Exkurs: Incubator Modules [preview]#Incubator# [jep]#https://openjdk.java.net/jeps/11[JEP 11]#
 Analog _Preview Features_ für nicht-finale APIs und Tools +
 
 [source,bash]
@@ -621,12 +788,14 @@ java  --add-modules jdk.incubator.foo …
 Interessanterweise 2 "Incubator" in der LTS Version: _"Vector API"_ und _"Foreign Function & Memory API"_
 --
 
-== Foreign Function & Memory API [preview]#Incubator# 
-// [jep]#https://openjdk.java.net/jeps/412[JEP 412]#
 
+
+[.degrade]
 === Retro: Java Native Interface (JNI)
 
-image::jni-process.png[Java Native Interface Process, 800, float="left"]
+[.plain]
+image::jni-process.png[Java Native Interface Process, 1000, float="left"]
+
 [.small]
 --
 * 26 Jahre alt
@@ -787,7 +956,7 @@ class CallPid {
 
 
 
-[.refs.x-small]
+[.refs]
 --
 https://jdk.java.net/panama/[Project Panama Early-Access Builds]
 --
@@ -798,26 +967,195 @@ https://jdk.java.net/panama/[Project Panama Early-Access Builds]
 [.lightbg,background-video="hammer.mp4",background-video-loop="true",background-opacity="0.7"]
 == Tooling
 
-=== jdeps
-=== javadoc (+Demo?)
+=== Packaging Tool `jpackage` [jep]#https://openjdk.java.net/jeps/343[JEP 343]# [jep]#https://openjdk.java.net/jeps/392[JEP 392]#
 
-=== Packaging Tool `jdk.jpackage` [jep]#https://openjdk.java.net/jeps/343[JEP 343]# [jep]#https://openjdk.java.net/jeps/392[JEP 392]#
+Werkzeug zum Erstellen & Paketieren eigenständiger Java-Applikationen 
 
-* Create a tool for packaging self-contained Java applications.
-* Supports native packaging formats to give end users a natural installation experience. These formats include msi and exe on Windows, pkg and dmg on macOS, and deb and rpm on Linux.
-* Allows launch-time parameters to be specified at packaging time.
-* Non-Goals
-** There is no native splash screen support.
-** There is no auto-update mechanism.
+[.col2]
+--
+
+.icon:box-open[] Native Installer
+icon:windows[] → `.msi` und `.exe` +
+icon:apple[] → `.pkg` und `.dmg` +
+icon:linux[] → `.deb` und `.rpm` +
+--
+
+[.col2]
+--
+
+.icon:sliders-h[] Konfiguration
+Start-Optionen (JVM/App) +
+Meta-Daten +
+Datei-Assoziationen +
+--
+ 
+.icon:ban[] Nicht im Scope
+Splash-Screen +
+Auto-Update Mechanismus
+
+
+
 [.notes]
 --
 * Preview mit JDK14, stabilisiert mit JDK16
+* Native Installerformate für natürliche Installations UX
 --
-
-
 
 [%notitle,background-video="jpackagerfast.mp4",background-size="contain",background-color="black"]
 === Installation packages with `jpackager` [jep]#https://openjdk.java.net/jeps/343[JEP 343]# [jep]#https://openjdk.java.net/jeps/392[JEP 392]#
+
+
+[.degrade]
+=== Verwendung `jpackage`
+
+[source.bgap,bash]
+----
+$ jpackage --name myapp --input lib \
+           --main-jar main.jar --main-class myapp.Main
+----
+
+[%step.col3-l.small]
+--
+.Allgemeines
+[source]
+----
+--app-version <version>
+--copyright <string>
+--description <string>
+--license-file <file>
+--name <string>
+--vendor <string>
+----
+--
+
+[%step.col3-c.small]
+--
+.File associations
+Definition via Propertydatei 
+
+[decent]#Dateiendung, MIME-Typ, Icon, Beschreibung#
+--
+
+[%step.col3-r.small]
+--
+.Launcher
+* Default Arguments
+* JVM Options
+* Zusätzliche Launcher
+--
+
+[%step]
+.Plattform
+[.decent.x-small]#wie Linux-Menügruppe, Mac Code-Signing, Windows UUID & Shortcut, u.a.#
+
+
+[.notes]
+--
+* Für Windows muss _Wix_ installiert sein
+--
+
+
+=== `javadoc`
+
+Das Javadoc-Tool hat mit JDK16 umfassende Verbesserungen erfahren…
+
+[.col2s.x-small.decent.lgap]
+* Verbesserte Suche
+* Neues/Verbessertes _New_, +
+  _Deprecated_, _Related Package_
+* Javadoc Errors zeigen Code-Ausschnitt
+* Mobile-friendly Layout
+* autom. Links zur JDK API
+* Checks für leere Absätze
+* Bessere "Typ"-Terminologie
+* Bessere Darstellung von `@see`, Paket-Zusammenfassungen, Nested Class, u.a.
+* HTML4 & IFRAME Support entfernt
+
+[%step.col2.small]
+--
+.`@return` Shortcut
+[source.small,java]
+----
+/** {@return The max value in the array} */
+public static int max(final int... array) {
+----
+↓ +
+image:return.png[Javadoc Result,role="plain"]
+--
+
+
+[%notitle,background-video="javadoc.mp4",background-video-loop="false",background-size="contain"]
+=== Javadoc Demo
+
+
+
+
+
+=== jdeps
+
+
+
+
+
+
+== GraalVM
+=== Überblick & Stand
+* Polyglott VM
+* SubstrateVM: AoT Compiler
+* GraalVM Community & Enterprise
+
+//[%notitle,background-image="graalvm-architecture.png"]
+=== Project Metropolis
+image::graalvm-architecture.png[GraalVM ecosystem]
+
+[.notes]
+--
+* Polyglot VM: Execute multiple language with zero overhead
+* Can run in multiple environments; Can produce native images
+* Zero-overhead interop
+--
+
+=== GraalVM -- Polyglot VM [jep]#https://openjdk.java.net/jeps/243[JEP 243]# [jep]#https://openjdk.java.net/jeps/246[JEP 246]# [jep]#https://openjdk.java.net/jeps/295[JEP 295]#
+[.col2]
+--
+* *Ahead-of time compiler* (AoT)
+* Generic VM +
+ for *different languages* +
+→ _JVM_ (Java, Kotlin, Scala, …) +
+→ _LLVM_ (C, C++) → native +
+→ _Java_ Script, Python, Ruby, R
+--
+[.col2]
+--
+* Shared Runtime → Zero overhead for language interop
+* *Native executables* +
+  (GraalVM on SubstrateVM) +
+  → Much smaller startup & memory
+--
+[.clear.decent]
+--
+.AoT can be used today:
+[.x-small]#`java -XX:+UnlockExperimentalVMOptions -XX:+EnableJVMCI -XX:+UseJVMCICompiler`#
+--
+[.notes]
+--
+* Multiple parts:
+** AoT Compiler
+** Graal VM / Substrate VM as runtime
+* AoT → improved startup time vs. JIT
+* Limitations: Dynamic (Reflection); highly experimental
+* AoT Compile can be used today
+--
+
+=== Frameworks
+* Helidon, Quarkus.io, Micronaut, (?Spring Fu, Javalin, Ktor, Vert.x)
+* zielen auf GraalVM AoT Compilation & Microservices
+* z.B. Dependency Resolver zur Compiletime via Annotation Processing vs. Laufzeit
+* Java CLI native image
+
+=== Demo
+* xxx
+
 
 
 
@@ -825,21 +1163,40 @@ https://jdk.java.net/panama/[Project Panama Early-Access Builds]
 
 === Strongly Encapsulate JDK Internals by Default 
 * JEP 411 (JDK 17): The Security Manager was deprecated for removal
-* https://openjdk.java.net/jeps/306 JEP 306 (JDK 17): Always-strict floating-point semantics have been restored
-
-
 [.notes]
 --
 * Java currently supports two different models for floating-point operations. One is the strict floating-point semantics, which are supported by AMD and Intel microprocessors. However, Java’s default is a slightly different floating-point semantics scheme. This split occurred back in Java SE 1.2, when there were some issues with the x87 math coprocessor. It’s no longer needed because all of today’s processors support SSE2 (Streaming SIMD Extensions 2) and later extensions in a way that eliminates the need for the default semantics. Therefore JEP 306’s intention is to make floating-point operations consistently strict by restoring the original floating-point semantics to the language and JVM.
+
+Strong encapsulation for JDK internals, except for critical internal APIs such as sun.misc.Unsafe, would make it no longer be possible to relax the strong encapsulation of internal elements via a single command-line option, as was doable in JDK 9 through JDK 16. Goals of the plan include improving security and maintainability of the JDK and encouraging developers to migrate from internal elements to standard APIs.
 --
 
+
+
+
+=== Always stirct fps
+https://openjdk.java.net/jeps/306
+
+[.notes]
+--
+* https://openjdk.java.net/jeps/306 JEP 306 (JDK 17): Always-strict floating-point semantics have been restored
+
+With the restoration of always-strict floating point semantics, floating-point operations will be made consistently strict, rather than having both strict floating point semantics (strictfp) and subtly different default floating point semantics. This restores the original floating point semantics to the language and VM, matching the semantics before the introduction of strict and default floating point modes in Java Standard Edition 1.2. Goals of this effort include easing development of numerically sensitive libraries including java.lang.Math and java.lang.StrictMath. The impetus for changing the default floating point semantics in the late-1990s stemmed from bad interaction between the original Java language and JVM semantics and some peculiarities of the x87 floating point coprocessor instruction set of the popular x86 architecture. Matching the exact floating point semantics in all cases, including subnormal operands and results, required large overheads of additional instructions. Matching the results in the absence of overflow or underflow could be done with less overhead and that is roughly what is allowed by the revised default floating point semantics introduced in Java SE 1.2. But the SSE2 (Streaming SIMD Extensions 2) extensions, shipped in Pentium 4 and later processors starting circa 2001, could support strict JVM floating point operations in a straightforward manner without undue overhead. Since Intel and AMD support SSE2 and later extensions that allow natural support of strict floating point semantics, the technical motivation for having a default floating point semantics different than strict no longer exists.
+--
 
 === Plattform 
 .Architekturen
 * JEP 391: macOS/AArch64 Port
+https://openjdk.java.net/jeps/391
 
 .Unicode
 * x
+
+[.notes]
+--
+Porting the JDK to MacOS/AArch64 in response to Apple’s plan to transition its Macintosh computers from x64 to AArch64. An AArch64 port for Java already exists for Linux and work is underway for Windows. Java builders expect to reuse existing AArch64 code from these ports by employing conditional compilation, as is the norm in ports of the JDK, to accommodate differences in low-level conventions such as the application binary interface and the set of reserved processor registers. Changes for MacOS/AArch64 risk breaking the existing Linux/AArch64, Windows/AArch64, and MacOS/x64 ports, but the risk will be reduced through pre-integration testing.
+--
+
+
 
 === Kryptographie
 * Cipher Streams & Signatures
@@ -869,6 +1226,7 @@ TODO
 * https://docs.oracle.com/en/java/javase/14/vm/class-data-sharing.html[Application Class-Data Sharing]
 * http://www.oracle.com/pls/topic/lookup?ctx=javase14&id=dynamic_CDS_archive[Dynamic CDS Archive]
 * https://blogs.oracle.com/javamagazine/understanding-the-jdks-new-superfast-garbage-collectors[Understanding the JDK’s New Superfast Garbage Collectors]
+* https://entwickler.de/java/kurze-pause[Kurze Pause]
 
 .Tools
 * http://jdk.java.net/jmc/[JDK Mission Control]

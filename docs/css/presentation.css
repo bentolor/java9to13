@@ -1,6 +1,12 @@
+@import url("../fonts/fontawesome/css/v4-shims.css");
+.center { text-align: center ;}
+
+section.forcebottom {   top: 600px !important; }
+section.forcetop {   top: 0px !important; }
+
 /*
    Colors: 
-   - base bg: #ffcea3    - border:  #745d48    - bglight: #fff8f1c0
+   - base bg: #fffafa    - border:  #745d48    - bglight: #fff8f1c0
    - bgdark: #745d4840   - vdark: #33291f  
  */
 
@@ -14,14 +20,14 @@ section .underline {
 
 /* ex: e7b68b */
 body {
-  background: #ffcea3;
-  background: -moz-radial-gradient(center, circle cover, #fff 0%, #ffcea3 100%);
-  background: -webkit-gradient(radial, center center, 0px, center center, 100%, color-stop(0%, #fff), color-stop(100%, #ffcea3));
-  background: -webkit-radial-gradient(center, circle cover, #fff 0%, #ffcea3 100%);
-  background: -o-radial-gradient(center, circle cover, #fff 0%, #ffcea3 100%);
-  background: -ms-radial-gradient(center, circle cover, #fff 0%, #ffcea3 100%);
-  background: radial-gradient(center, circle cover, #fff 0%, #ffcea3 100%); 
-  background-color: #ffcea3;
+  background: #fffafa;
+  background: -moz-radial-gradient(center, circle cover, #fff 0%, #fffafa 100%);
+  background: -webkit-gradient(radial, center center, 0px, center center, 100%, color-stop(0%, #fff), color-stop(100%, #fffafa));
+  background: -webkit-radial-gradient(center, circle cover, #fff 0%, #fffafa 100%);
+  background: -o-radial-gradient(center, circle cover, #fff 0%, #fffafa 100%);
+  background: -ms-radial-gradient(center, circle cover, #fff 0%, #fffafa 100%);
+  background: radial-gradient(center, circle cover, #fff 0%, #fffafa 100%); 
+  background-color: #fffafa;
 }
 /* .backgrounds {  opacity: 0.6; } */
 
@@ -53,9 +59,15 @@ SECTION .title {
   text-decoration: underline;
   text-transform: uppercase;
   line-height: 1em; 
-  margin-bottom: -.2rem;
   margin-top: 2rem;
   color: #3a2104cc
+}
+SECTION .small .title {
+  font-size: 2.2rem;
+}
+
+SECTION .x-small .title {
+  font-size: 2rem;
 }
 
 
@@ -164,7 +176,7 @@ SECTION .title {
 }
 
 /* Plain Images ohne Buzz */
-.reveal img.plain {
+.reveal img.plain, .reveal .plain img {
   margin: 0;
   background: none;
   border: none;
@@ -275,6 +287,12 @@ SECTION .title {
   margin: 0 1% !important;
   float:left;
 }
+.col2s {
+  width:40% !important;
+  margin: 0 1rem 0 5rem !important;
+  float:left;
+}
+
 /* Aufzählung nicht zentrieren im 2col layout.*/
 .reveal .col2 ol, .reveal .col2  dl, .reveal .col2  ul {
     display:table;
@@ -360,17 +378,20 @@ DIV.refs {
   left: 0;
   bottom: 0;
   text-align: right;
+  font-size: 1.2rem;
+  font-weight: lighter;
 }
 
 DIV.refs P, DIV.refs P A {
   color: rgba(0,0,0,.4);
   margin: 0;
+  text-decoration: none;
 }
 
 DIV.refs DIV.ulist {
   margin: 0; padding: 0;
-      font-size: 1.3rem;
-    line-height: 0.9;
+  font-size: 1.3rem;
+  line-height: 0.9;
 
 }
 
@@ -397,6 +418,10 @@ DIV.refs:hover LI P {
 DIV.refs LI:hover P A {
   text-decoration: underline;
   color: blue;
+}
+
+.deleted {
+  text-decoration: line-through;
 }
 
 /* --------------------------------------------------- special slides styles */
