@@ -84,16 +84,15 @@
 // --
 
 
-[.lightbg,background-video="relaxing.mp4",background-video-loop="true",background-opacity="0.7"]
+[.lightbg,background-video= "relaxing.mp4",options="loop,muted",background-opacity="0.7"]
 == Agenda
-1. Native
-// Vector API
-//** Native Memory/Function
-2. Diagnostik
-//** JFR / JMC
-3. Memory Management
-4. Tools
-5. Details & Maintenance
+. Garbage Collectoren
+. Class-Data Sharing
+. Java Flight Recorder
+. Foreign Function & Memory
+. Tooling
+. Details & Maintenance
+
 
 
 // == Vector API
@@ -403,11 +402,15 @@ Class Data-Sharing::
 Application Class-Data Sharing (AppCDS)::
 Erlaubt zusätzlich Applikations-Klassen in das CDS aufzunehmen
 
+
+
 === Neuerungen im Bereich CDS
 
+[.fragment]
 Default CDS Archive [version]#12# [jep]#https://openjdk.java.net/jeps/341[JEP 341]#::
 JVM liefert nun per Default ein `classes.jsa` CDS-Archiv mit aus, welches ein Subset der häufigsten JDK-Klassen umfasst.
 
+[.fragment]
 Dynamic CDS Archive [version]#13# [jep]#https://openjdk.java.net/jeps/350[JEP 350]#::
 Vereinfacht erheblich die Erstellung eigener AppCDS Archive durch automatische Auswahl und Archiverzeugung beim beenden der Java-Applikation.
 
@@ -417,7 +420,7 @@ Vereinfacht erheblich die Erstellung eigener AppCDS Archive durch automatische A
 .Erstellung über Liste [version]#11#
 [source,shell]
 ----
-$ java -Xshare:off -XX:DumpLoadedClassList=myclasses.txt -cp myapp.jar MyApp
+$ java -Xshare:off  -XX:DumpLoadedClassList=myclasses.txt -cp myapp.jar MyApp
 
 $ java -Xshare:dump -XX:SharedArchiveFile=myapp.jsa \
        -XX:SharedClassListFile=myclasses.txt -cp myapp.jar
@@ -437,21 +440,40 @@ $ java -XX:SharedArchiveFile=myapp.jsa -cp myapp.jar MyApp
 $ java -XX:ArchiveClassesAtExit=myapp.jsa -cp myapp.jar MyApp
 ----
 
+[.notes]
+--
+* Bedenken: Nur die Klassen die die JVM während des Lauf lädt.
+--
+
+
 
 [%notitle]
 === AppCDS Gewinne
 image::app_cds_time_to_first_response.png[AppCDS Startup Times,height=700]
 [.refs]
 --
-Quelle: https://www.morling.dev/blog/building-class-data-sharing-archives-with-apache-maven/
+https://www.morling.dev/blog/building-class-data-sharing-archives-with-apache-maven/
 --
 [.notes]
 --
+* → Gunnar Morling
 * Teils bis zu 40% Reduktion in Startup-Times
-* Noch mehr Potential mit Kombination von `jlink`
-* Quelle hier: Gunnar Morling
 --
 
+[%notitle.degrade]
+=== AppCDS kombiniert mit `jlink`
+.AppCDS kombiniert mit `jlink`
+{sp}
+
+image::jlink_app_cds_image_size_and_startup_times.png[AppCDS Startup Times,height=640]
+
+[.notes]
+--
+* Noch mehr Potential mit Kombination von `jlink`
+** Tool seit J
+** Nur benötigte Module
+* Komplexität des Gesamtbuilds
+--
 
 
 
@@ -516,24 +538,44 @@ Optionen: `filename`, `delay`, `dumponexit`, `duration`, `maxage`, `maxsize`, �
      --events CPULoad \
      --json record.jfr
   jfr summary record.jfr
+--
 
+[.notes]
+--
+. PID identifizieren
+. JFR starten (& konfigurieren)
+. Optionen → bei Crash, delay, laufzeit, Ringbuffer-Parameter
+. Events sichten 
+.. Filter nach Event & Kategorie
+.. → Export JSON mgl
+.. Grobe Summe
 
-
+Grobe Orientierung ohne ext. mittel; für mehr Einsichten brauchts aber Tools.
 --
 
 
-
-
-[%notitle,background-video="jmc.mp4",background-video-loop="false",background-size="contain"]
+[%notitle,background-video="jmc.mp4",background-size="contain"]
 === JDK Mission Control (JMC)
 [.refs]
 --
 https://openjdk.java.net/projects/jmc/8/
 --
 
-=== JFR Event Streaming [jep]#https://openjdk.java.net/jeps/349[JEP 349]#
+[.notes]
+--
+* Ex-Payware "Java F…"; seit v11 Open "JDK F…"
+* 8.1+ für JFR Events von JDK17 (Heap)
+* JMX Live Status / Properties
+* Hilfreich: Automatisierte Alert bei Grenzwerte
+* Aber auch: JFR dumps laden bzw. live tracen
+* Erlaubt grobe Kategorieeinstellung
+* … und per einzelnem JFR Event 
+--
 
-[%notitle,transition="fade-out",background-image="jfrstreaming0.png",background-size="contain"]
+
+=== JFR Event Streaming [jep]#https://openjdk.java.net/jeps/349[JEP 349]# [version]#14# [version]#16#
+
+[%notitle,transition="none",background-image="jfrstreaming0.png",background-size="contain",background-color="white"]
 === JDK11
 [.notes]
 --
@@ -541,8 +583,8 @@ https://openjdk.java.net/projects/jmc/8/
 * Gut für Profiling, schlecht für Continuous Monitoring
 --
 
-[%notitle,transition="fade-out",background-image="jfrstreaming1.png",background-size="contain"]
-=== JDK14
+[%notitle,transition="none",background-image="jfrstreaming1.png",background-size="contain",background-color="white"]
+=== JDK14 
 [.notes]
 --
 * Mit Java 14: JFR Event Streaming:
@@ -550,12 +592,13 @@ https://openjdk.java.net/projects/jmc/8/
 * Ziel: Trivial kontinuierlich JFR Events monitoren und darauf reagieren können
 --
 
-[%notitle,transition="fade-out",background-image="jfrstreaming2.png",background-size="contain"]
+[%notitle,transition="none",background-image="jfrstreaming2.png",background-size="contain",background-color="white"]
 === JDK16
 [.notes]
 --
-* JDK 16: Erlaubt auch Remote Streaming
-* JDK16: Neues, leichtgewichterges `jdk.ObjectAllocationSample` **default on**
+* Neu in JDK 16: 
+** Erlaubt auch Remote Streaming
+** Neues, leichtgewichterges `jdk.ObjectAllocationSample` **default on**
 * GraalVM ab 21.2 unterstützt ebenfalls JFR
 --
 
@@ -645,7 +688,7 @@ public class ButtonEvent extends Event {
 }
 ----
 --
-[col2]
+[%step.col2]
 --
 .Event füttern & auslösen
 [source,java]
@@ -684,48 +727,8 @@ Timeshift-Analyse::
 Recording mitlaufen lassen und bei Performance-Problemen rückwirkend seit Problemstartpunkt aus dem JFR Event Repository extrahieren & analysieren (_„Timeshift“_)
 
 
-== Misc
 
 
-=== Bessere Nullpointers [jep]#https://openjdk.java.net/jeps/358[JEP 358]#
-
-[source,java]
-----
-class MyClass {
-    record Person(String name, String email) {}
-    public static void main(String[] args) {
-        var p = new Person("Peter", null);                                 <1>
-        var e = p.email().toLowerCase();
-    }
-}
-----
-
-[source,text,subs="none"]
-----
-$ java MyClass.java
-Exception in thread "main" java.lang.NullPointerException: Cannot invoke <mark>"String.toLowerCase()</mark> because the return value of <mark>"MyClass$Person.email()" is null</mark>
-        at MyClass.main(MyClass.java:5)
-----
-
-<1> Für Namen von _lokalen Variablen_ und _Lambdas_ mit `-g:vars` compilieren!
-
-
-[.notes]
---
-* Erforderte früher `-XX:+ShowCodeDetailsInExceptionMessages`, nun default!
---
-
-
-
-=== JVM Diagnostics
-
-* `-XX:+ExtensiveErrorReports` → ausführlichere Crash-Reports in `hs_err<pid>.log`
-* Asynchrones _Unified JVM Logging_ erzwingen `-Xlog:async` und `-XX:AsyncLogBufferSize=<bytes>` über separaten Thread
-
-[.notes]
---
-* To avoid undesirable delays in a thread using unified JVM logging, you now can request that the unified logging system operate in asynchronous mode by using the -Xlog:async command-line option. In asynchronous logging mode, all logging messages are queued to a buffer, and a standalone thread is responsible for flushing them to the corresponding outputs. The intermediate buffer is bounded; on buffer exhaustion, the enqueuing message is discarded. 
---
 
 
 
@@ -812,6 +815,9 @@ sehr verworren
 --
 bildquelle: https://developers.redhat.com/blog/2016/11/03/eclipse-for-jni-development-and-debugging-on-linux-java-and-c#general_overview_of_jni_compilation_and_the_eclipse_project
 --
+
+
+
 
 === Motivation Project Panama [preview]#Incubator# [jep]#https://openjdk.java.net/jeps/412[JEP 412]#
 
@@ -930,37 +936,66 @@ return cipherText.toByteArray();
 
 === Helferlein `jextract`
 
-Generiert einen API Wrapper als `.class` oder `.java` +
-direkt aus `.h`-Dateien mit den notwendigen Foreign API-Aufrufen. +
-[.decent.xx-small]#Nicht in JDK 17 direkt enthalten; sondern via Panama EAP JDK Builds.#
 
-[.fragment]
---
-[source,shell]
+Generiert aus direkt aus `.h`-Dateien passende  API Wrapper +
+als `.class` oder `.java` mit den notwendigen Foreign API-Aufrufen. +
+[.decent.xx-small]#Nicht direkt in JDK 17 enthalten, sondern via Panama EAP JDK Builds (siehe Link).#
+
+
+[source.fragment,shell]
 ----
 $ jextract -t de.bentolor /usr/include/unistd.h
 ----
 
-[source,java]
+[source.fragment,java]
 ----
 import de.bentolor.unistd_h;
 
 class CallPid {
    public static void main(String[] args) {
       System.out.println( unistd_h.getpid() );
-      System.out.println( ProcessHandle.current().pid() );
   }
 }
 ----
+
+
+[.notes]
 --
-
-
+* Nicht Teil des JDK, separater Download
+* Erzeugt / Generiert den Boiler Code
+* Da große 89MB _LLVM_ Dependency, vermutlich nie JDK Bestandteil
+--
 
 [.refs]
 --
 https://jdk.java.net/panama/[Project Panama Early-Access Builds]
 --
 
+=== `jextract` Demo
+
+TODO:: 
+* demo-video
+* jextract
+* generierter source
+* am Beispiel Curl o.ä.
+
+// import de.bentolor.unistd_h;
+
+// class CallPid {
+//    public static void main(String[] args) {
+//       System.out.println( unistd_h.getpid() );
+//       System.out.println( ProcessHandle.current().pid() );
+//   }
+// }
+
+
+
+[%notitle]
+=== `jextract` Verwendungsbeispiele
+
+image::jextract-examples.png[https://github.com/sundararajana/panama-jextract-samples,height=640]
+
+https://github.com/sundararajana/panama-jextract-samples
 
 
 
@@ -1073,151 +1108,163 @@ Das Javadoc-Tool hat mit JDK16 umfassende Verbesserungen erfahren…
 
 [%step.col2.small]
 --
-.`@return` Shortcut
+.`{@return …}`-Shortcut
 [source.small,java]
 ----
 /** {@return The max value in the array} */
 public static int max(final int... array) {
 ----
+[.fragment]
 ↓ +
 image:return.png[Javadoc Result,role="plain"]
 --
 
 
-[%notitle,background-video="javadoc.mp4",background-video-loop="false",background-size="contain"]
+[%notitle,background-video="javadoc.mp4",background-size="contain"]
 === Javadoc Demo
-
-
-
-
-
-=== jdeps
-
-
-
-
-
-
-== GraalVM
-=== Überblick & Stand
-* Polyglott VM
-* SubstrateVM: AoT Compiler
-* GraalVM Community & Enterprise
-
-//[%notitle,background-image="graalvm-architecture.png"]
-=== Project Metropolis
-image::graalvm-architecture.png[GraalVM ecosystem]
-
-[.notes]
---
-* Polyglot VM: Execute multiple language with zero overhead
-* Can run in multiple environments; Can produce native images
-* Zero-overhead interop
---
-
-=== GraalVM -- Polyglot VM [jep]#https://openjdk.java.net/jeps/243[JEP 243]# [jep]#https://openjdk.java.net/jeps/246[JEP 246]# [jep]#https://openjdk.java.net/jeps/295[JEP 295]#
-[.col2]
---
-* *Ahead-of time compiler* (AoT)
-* Generic VM +
- for *different languages* +
-→ _JVM_ (Java, Kotlin, Scala, …) +
-→ _LLVM_ (C, C++) → native +
-→ _Java_ Script, Python, Ruby, R
---
-[.col2]
---
-* Shared Runtime → Zero overhead for language interop
-* *Native executables* +
-  (GraalVM on SubstrateVM) +
-  → Much smaller startup & memory
---
-[.clear.decent]
---
-.AoT can be used today:
-[.x-small]#`java -XX:+UnlockExperimentalVMOptions -XX:+EnableJVMCI -XX:+UseJVMCICompiler`#
---
-[.notes]
---
-* Multiple parts:
-** AoT Compiler
-** Graal VM / Substrate VM as runtime
-* AoT → improved startup time vs. JIT
-* Limitations: Dynamic (Reflection); highly experimental
-* AoT Compile can be used today
---
-
-=== Frameworks
-* Helidon, Quarkus.io, Micronaut, (?Spring Fu, Javalin, Ktor, Vert.x)
-* zielen auf GraalVM AoT Compilation & Microservices
-* z.B. Dependency Resolver zur Compiletime via Annotation Processing vs. Laufzeit
-* Java CLI native image
-
-=== Demo
-* xxx
 
 
 
 
 == Details & Maintenance
 
-=== Strongly Encapsulate JDK Internals by Default 
-* JEP 411 (JDK 17): The Security Manager was deprecated for removal
-[.notes]
---
-* Java currently supports two different models for floating-point operations. One is the strict floating-point semantics, which are supported by AMD and Intel microprocessors. However, Java’s default is a slightly different floating-point semantics scheme. This split occurred back in Java SE 1.2, when there were some issues with the x87 math coprocessor. It’s no longer needed because all of today’s processors support SSE2 (Streaming SIMD Extensions 2) and later extensions in a way that eliminates the need for the default semantics. Therefore JEP 306’s intention is to make floating-point operations consistently strict by restoring the original floating-point semantics to the language and JVM.
 
-Strong encapsulation for JDK internals, except for critical internal APIs such as sun.misc.Unsafe, would make it no longer be possible to relax the strong encapsulation of internal elements via a single command-line option, as was doable in JDK 9 through JDK 16. Goals of the plan include improving security and maintainability of the JDK and encouraging developers to migrate from internal elements to standard APIs.
---
+=== Hilfreiche Nullpointers [jep]#https://openjdk.java.net/jeps/358[JEP 358]# [version]#14#
 
+[source,java]
+----
+class MyClass {
+    record Person(String name, String email) {}
+    public static void main(String[] args) {
+        var p = new Person("Peter", null);                                 <1>
+        var e = p.email().toLowerCase();
+    }
+}
+----
 
+[source,text,subs="none"]
+----
+$ java MyClass.java
+Exception in thread "main" java.lang.NullPointerException: Cannot invoke <mark>"String.toLowerCase()</mark> because the return value of <mark>"MyClass$Person.email()" is null</mark>
+        at MyClass.main(MyClass.java:5)
+----
 
-
-=== Always stirct fps
-https://openjdk.java.net/jeps/306
-
-[.notes]
---
-* https://openjdk.java.net/jeps/306 JEP 306 (JDK 17): Always-strict floating-point semantics have been restored
-
-With the restoration of always-strict floating point semantics, floating-point operations will be made consistently strict, rather than having both strict floating point semantics (strictfp) and subtly different default floating point semantics. This restores the original floating point semantics to the language and VM, matching the semantics before the introduction of strict and default floating point modes in Java Standard Edition 1.2. Goals of this effort include easing development of numerically sensitive libraries including java.lang.Math and java.lang.StrictMath. The impetus for changing the default floating point semantics in the late-1990s stemmed from bad interaction between the original Java language and JVM semantics and some peculiarities of the x87 floating point coprocessor instruction set of the popular x86 architecture. Matching the exact floating point semantics in all cases, including subnormal operands and results, required large overheads of additional instructions. Matching the results in the absence of overflow or underflow could be done with less overhead and that is roughly what is allowed by the revised default floating point semantics introduced in Java SE 1.2. But the SSE2 (Streaming SIMD Extensions 2) extensions, shipped in Pentium 4 and later processors starting circa 2001, could support strict JVM floating point operations in a straightforward manner without undue overhead. Since Intel and AMD support SSE2 and later extensions that allow natural support of strict floating point semantics, the technical motivation for having a default floating point semantics different than strict no longer exists.
---
-
-=== Plattform 
-.Architekturen
-* JEP 391: macOS/AArch64 Port
-https://openjdk.java.net/jeps/391
-
-.Unicode
-* x
+<1> Für Namen von [.step.highlight-current-blue]#_lokalen Variablen_ und _Lambdas_ mit `-g:vars` compilieren!#
 
 [.notes]
 --
-Porting the JDK to MacOS/AArch64 in response to Apple’s plan to transition its Macintosh computers from x64 to AArch64. An AArch64 port for Java already exists for Linux and work is underway for Windows. Java builders expect to reuse existing AArch64 code from these ports by employing conditional compilation, as is the norm in ports of the JDK, to accommodate differences in low-level conventions such as the application binary interface and the set of reserved processor registers. Changes for MacOS/AArch64 risk breaking the existing Linux/AArch64, Windows/AArch64, and MacOS/x64 ports, but the risk will be reduced through pre-integration testing.
+* Erforderte früher `-XX:+ShowCodeDetailsInExceptionMessages`, nun default!
+--
+
+
+[.small]
+=== JVM Diagnostics & Misc
+
+* Strongly Encapsulate JDK Internals [jep]#https://openjdk.java.net/jeps/391[JEP 391]#
+* macOS/AArch64 Port [jep]#https://openjdk.java.net/jeps/391[JEP 391]#
+* SecurityManager `forRemoval` [jep]#https://openjdk.java.net/jeps/411[JEP 411]#
+* Always-Strict Floating-Point Semantics [jep]#https://openjdk.java.net/jeps/306[JEP 306]#
+* Asynchrones _Unified JVM Logging_ (`-Xlog:async`)
+* Ausführlichere Crashs: `-XX:+ExtensiveErrorReports`
+
+x
+
+* Unicode  x
+* Kryptographie: 
+** Cipher Streams 
+** Signatures
+** Enhanced PRNG  [jep]#https://openjdk.java.net/jeps/356[JEP 356]#
+
+[.notes]
+--
+* `-XX:+ExtensiveErrorReports` → ausführlichere Crash-`hs_err….log`
+* StrictFPS: Revert JDK 1.2 Change für x87 Coprozessoren
+* Porting the JDK to MacOS/AArch64 → Apple M1.
+* Mit JDK17 `--illegal-access` nicht mehr möglich
+** Motivation: Jigsaw
+** Aber: sun.misc.Unsafe will remain available.
+** Ziel: Druck weiter erhöhen
+* PRNG: Neue Impl. supporten
 --
 
 
 
-=== Kryptographie
-* Cipher Streams & Signatures
+== GraalVM
 
 
-== Fazit
+[%notitle,background-image="graalvm-architecture.png",background-size="contain"]
+=== Project Metropolis
+
+[.notes]
+--
+* Polyglot VM
+* In Java geschrieben VM die auf div. Sprachen zielt
+* gemeinnsame Runtime → multiple language with zero overhead
+* Kann mit LLVM native images produzieren
+--
+
+[.left]
+=== GraalVM -- Polyglot VM
+[.col2]
+--
+* *Ahead-of Time compiler* [verydecent]#(AoT)#
+* Polyglotte VM für _div. Sprachen_ +
+→ **JVM**  [decent]#(Java, Kotlin, Scala, …)# +
+→ **LLVM** [decent]#(C, C++) → native# +
+→ **Java** [decent]#Script, Python, Ruby, R#
+--
+
+[.col2]
+--
+* Sprachen **sharen Runtime** +
+  [.decent]#→ Zero Interop Overhead#
+* *Native executables* _(SubstrateVM_) +
+  [.decent]#→ Kleiner Startup & Memory#
+* [.decent]#GraalVM Community & Enterprise# +
+  {sp} +
+  {sp}
+--
+
+[.clear.tgap.fragment]
+--
+.Microservice Frameworks
+_Helidon, Quarkus.io, Micronaut, Spring Fu, Ktor, …_ +
+[.verydecent.x-small]#→ zielen auf GraalVM AoT & Microservices, z.B. via IoC zur Compiletime#
+--
+
+[.notes]
+--
+. Fokus: AoT
+. Mehrteilig:
+* Graal VM & Substrate VM as runtime
+. Benefits
+* AoT → schnellere Startzeiten vs. JIT
+* Native Images → kleinere Startup/Memory → Container
+* Limitations: Dynamic (Reflection)
+* Beeindruckend: GraalVM ab 21.2 unterstützt ebenfalls JFR
+. Commercial offerings "GraalVM Enterprise"
+. zahlreiche Frameworks zielen auf GraalVM AoT & Microservices
+* z.B. IoC zur Compiletime via APT vs. Laufzeit
+--
 
 
-[%notitle, background-image="tweet-jdk-evolving.png"]
-=== Bottom line
-TODO
+== Vielen Dank!
 
+
+// [%notitle, background-image="tweet-jdk-evolving.png"]
+// === Bottom line
+// [.notes]
+// --
+// Oldy, but goldie: Still valid
+// --
 
 
 [.lightbg,background-video="industrial.mp4",background-video-loop="true",background-opacity="0.6"]
-=== Ressourcen
+== Ressourcen
 
 [.col3-l.xx-small]
 --
 .Referenzwerke
-* xx
 * https://chriswhocodes.com/vm-options-explorer.html[VM Options Explorer]
 * https://docs.oracle.com/en/java/javase/17/gctuning/available-collectors.html[HotSpot Tuning Guide: Available Collectors]
 
