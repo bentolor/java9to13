@@ -17,7 +17,7 @@
 :revealjs_slideNumber: c/t
 :revealjs_showSlideNumber: speaker
 :revealjs_autoPlayMedia: true
-:revealjs_defaultTiming: 50
+:revealjs_defaultTiming: 48
 //:revealjs_transitionSpeed: fast
 //:revealjs_parallaxBackgroundImage: images/background-landscape-light-orange.jpg
 //:revealjs_parallaxBackgroundSize: 4936px 2092px
