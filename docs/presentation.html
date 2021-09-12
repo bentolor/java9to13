@@ -588,7 +588,54 @@ class CallPid {
   }
 }</code></pre></div></div>
 <aside class="notes"><div class="ulist"><ul><li><p>Nicht Teil des JDK, separater Download</p></li><li><p>Erzeugt / Generiert den Boiler Code</p></li><li><p>Da große 89MB <em>LLVM</em> Dependency, vermutlich nie JDK Bestandteil</p></li></ul></div></aside>
-<div class="openblock refs"><div class="content"><div class="paragraph"><p><a href="https://jdk.java.net/panama/">Project Panama Early-Access Builds</a></p></div></div></div></div></section><section id="_jextract_demo"><h2><code>jextract</code> Demo</h2><div class="slide-content"><div class="dlist"><dl><dt class="hdlist1">TODO</dt><dd><div class="ulist"><ul><li><p>demo-video</p></li><li><p>jextract</p></li><li><p>generierter source</p></li><li><p>am Beispiel Curl o.ä.</p></li></ul></div></dd></dl></div></div></section><section id="_jextract_verwendungsbeispiele"><div class="slide-content"><div class="imageblock"><img src="images/jextract-examples.png" alt="https://github.com/sundararajana/panama-jextract-samples" height="640"></div>
+<div class="openblock refs"><div class="content"><div class="paragraph"><p><a href="https://jdk.java.net/panama/">Project Panama Early-Access Builds</a></p></div></div></div></div></section><section id="_jextract_demo" data-background-size="contain" data-background-video="images/native-python.mp4"></section><section id="_jextract_demo_transcript"><h2><code>jextract</code> Demo (Transcript)</h2><div class="slide-content"><div class="listingblock col2 x-small"><div class="content"><pre class="highlightjs highlight"><code class="language-bash hljs" data-noescape="true" data-lang="bash">mkdir hello-python
+cd hello-python
+
+locate Python.h
+
+jextract -t de.bentolor \
+         -l python3.8 \
+         -I /usr/include/python3.8/ \
+         -I /usr/include/ \
+         /usr/include/python3.8/Python.h
+
+joe Schlange.java
+
+java --add-modules jdk.incubator.foreign \
+     --enable-native-access=ALL-UNNAMED \
+     -Djava.library.path=/usr/lib/x86_64-linux-gnu/ \
+     Schlange.java
+
+jextract -t de.bentolor \
+         -l python3.8 \
+         -I /usr/include/python3.8/ \
+         -I /usr/include/ \
+         --source
+         /usr/include/python3.8/Python.h
+
+bat de/bentolor/Python_h.java
+
+bat de/bentolor/Python_h_4.java
+/s int PyRun_S</code></pre></div></div>
+<div class="listingblock col2 x-small"><div class="content"><pre class="highlightjs highlight"><code class="language-java hljs" data-noescape="true" data-lang="java">import jdk.incubator.foreign.*;
+import de.bentolor.Python_h;
+
+public class Schlange {
+  public static void main(String[] args) {
+    String script = """
+            print(sum([33, 55, 66]));
+            print('Hello Python 3!')
+            """;
+
+    Python_h.Py_Initialize();
+    try (var scope = ResourceScope.newConfinedScope()) {
+        var str = CLinker.toCString(script, scope);
+        Python_h.PyRun_SimpleStringFlags(
+              str, MemoryAddress.NULL);
+        Python_h.Py_Finalize();
+    }
+  }
+}</code></pre></div></div></div></section><section id="_jextract_verwendungsbeispiele"><div class="slide-content"><div class="imageblock"><img src="images/jextract-examples.png" alt="https://github.com/sundararajana/panama-jextract-samples" height="640"></div>
 <div class="paragraph"><p><a href="https://github.com/sundararajana/panama-jextract-samples" class="bare">https://github.com/sundararajana/panama-jextract-samples</a></p></div></div></section></section>
 <section><section id="_tooling" class="lightbg" data-background-video="images/hammer.mp4" data-background-video-loop data-background-opacity="0.8"><h2>Tooling</h2></section><section id="_packaging_tool_jpackage_jep_343_jep_392"><h2>Packaging Tool <code>jpackage</code> <span class="jep"><a href="https://openjdk.java.net/jeps/343">JEP 343</a></span> <span class="jep"><a href="https://openjdk.java.net/jeps/392">JEP 392</a></span></h2><div class="slide-content"><div class="paragraph"><p>Werkzeug zum Erstellen &amp; Paketieren eigenständiger Java-Applikationen</p></div>
 <div class="openblock col2"><div class="content"><div class="paragraph"><div class="title"><span class="icon"><i class="fa fa-box-open"></i></span> Native Installer</div><p><span class="icon"><i class="fa fa-windows"></i></span> → <code>.msi</code> und <code>.exe</code><br>
@@ -740,7 +787,7 @@ Reveal.initialize({
   // Specify the average time in seconds that you think you will spend
   // presenting each slide. This is used to show a pacing timer in the
   // speaker view
-  defaultTiming: 42,
+  defaultTiming: 50,
   // Specify the total time in seconds that is available to
   // present.  If this is set to a nonzero value, the pacing
   // timer will work out the time available for each slide,
@@ -771,7 +818,7 @@ Reveal.initialize({
   // Transition style for full page slide backgrounds (e.g., none, fade, slide, convex, concave, zoom)
   backgroundTransition: 'fade',
   // Number of slides away from the current that are visible
-  viewDistance: 5,
+  viewDistance: 3,
   // Number of slides away from the current that are visible on mobile
   // devices. It is advisable to set this to a lower number than
   // viewDistance in order to save resources.

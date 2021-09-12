@@ -8,7 +8,7 @@
 //:revealjs_autoSlide: 5000
 :revealjs_history: true
 :revealjs_fragmentInURL: true
-:revealjs_viewDistance: 5
+//:revealjs_viewDistance: 10
 :revealjs_width: 1408
 :revealjs_height: 792
 :revealjs_controls: false
@@ -17,7 +17,7 @@
 :revealjs_slideNumber: c/t
 :revealjs_showSlideNumber: speaker
 :revealjs_autoPlayMedia: true
-:revealjs_defaultTiming: 42
+:revealjs_defaultTiming: 50
 //:revealjs_transitionSpeed: fast
 //:revealjs_parallaxBackgroundImage: images/background-landscape-light-orange.jpg
 //:revealjs_parallaxBackgroundSize: 4936px 2092px
@@ -987,13 +987,67 @@ class CallPid {
 https://jdk.java.net/panama/[Project Panama Early-Access Builds]
 --
 
-=== `jextract` Demo
 
-TODO:: 
-* demo-video
-* jextract
-* generierter source
-* am Beispiel Curl o.ä.
+[%notitle,background-video="native-python.mp4",background-size="contain"]
+=== `jextract` Demo
+ 
+=== `jextract` Demo (Transcript)
+
+[source.col2.x-small,bash]
+----
+mkdir hello-python
+cd hello-python
+
+locate Python.h
+
+jextract -t de.bentolor \
+         -l python3.8 \
+         -I /usr/include/python3.8/ \
+         -I /usr/include/ \
+         /usr/include/python3.8/Python.h
+
+joe Schlange.java  
+
+java --add-modules jdk.incubator.foreign \
+     --enable-native-access=ALL-UNNAMED \
+     -Djava.library.path=/usr/lib/x86_64-linux-gnu/ \ 
+     Schlange.java
+
+jextract -t de.bentolor \
+         -l python3.8 \
+         -I /usr/include/python3.8/ \
+         -I /usr/include/ \
+         --source
+         /usr/include/python3.8/Python.h
+
+bat de/bentolor/Python_h.java
+
+bat de/bentolor/Python_h_4.java
+/s int PyRun_S
+----
+
+[source.col2.x-small,java]
+----
+import jdk.incubator.foreign.*;
+import de.bentolor.Python_h;
+
+public class Schlange {
+  public static void main(String[] args) {
+    String script = """
+            print(sum([33, 55, 66])); 
+            print('Hello Python 3!')
+            """;
+
+    Python_h.Py_Initialize();
+    try (var scope = ResourceScope.newConfinedScope()) {
+        var str = CLinker.toCString(script, scope);
+        Python_h.PyRun_SimpleStringFlags(
+              str, MemoryAddress.NULL);
+        Python_h.Py_Finalize();
+    }
+  }
+}
+----
 
 // import de.bentolor.unistd_h;
 
