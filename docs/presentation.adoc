@@ -368,21 +368,20 @@ https://wiki.openjdk.java.net/display/shenandoah
 . → Viel mehr; teils nicht in den Release Notes
 --
 
-
 === TL;DR Tipps für den GC
 
-[%step]
-Upgrade lohnt sich!
+[%step.statement.tgap]
+icon:level-up-alt[] Upgrade lohnt sich!
 
-[%step]
-Probieren geht über Studieren!
+[%step.statement]
+icon:graduation-cap[] Probieren geht über Studieren!
 
-[%step]
-Mut zum (probeweisen) Wegwerfen: +
+[%step.statement]
+icon:trash-alt[] Mut zum (probeweisen) Wegwerfen: +
 Alte Tuning-Parameter
 
-[%step]
-Latenz wichtig? → ZGC oder Shenandoah
+[%step.statement]
+icon:stopwatch[] Latenz wichtig? → ZGC oder Shenandoah
 
 
 [.refs]
@@ -405,9 +404,10 @@ https://docs.oracle.com/en/java/javase/17/gctuning/available-collectors.html
 === Class Data-Sharing in a Nutshell
 
 Class Data-Sharing::
-[emphasize]#Reduziert Startzeiten & Speicherbedarf# von JVMs durch `.jsa` Archiv mit Metadaten der Klassen.
+Reduziert Startzeiten & Speicherbedarf neuer JVMs
+durch `.jsa` Archiv mit Metadaten der Klassen.
 +
-→ Klassen liegen damit vorgeparsed in _direkt für die JVM verwendbarem_ Format vor. Das Archiv kann _read-only_ eingebunden werden, was dem OS _Caching_ & _Sharing_ erlaubt.
+→ Klassen liegen vorgeparsed _direkt für die JVM verwendbar_ vor. Das Archiv kann _read-only_ eingebunden werden, was dem OS _Caching_ & _Sharing_ erlaubt.
 +
 **Achtung:** Archive sind JVM Plattform- und Versionspezifisch!
 
@@ -418,7 +418,7 @@ Erlaubt zusätzlich Applikations-Klassen in das CDS aufzunehmen
 
 === Neuerungen im Bereich CDS
 
-[.fragment]
+[.fragment.tgap]
 Default CDS Archive [version]#12# [jep]#https://openjdk.java.net/jeps/341[JEP 341]#::
 JVM liefert nun per Default ein `classes.jsa` CDS-Archiv mit aus, welches ein Subset der häufigsten JDK-Klassen umfasst.
 
@@ -430,7 +430,7 @@ Vereinfacht erheblich die Erstellung eigener AppCDS Archive durch automatische A
 === AppCDS Archiverstellung
 
 .Erstellung über Liste [version]#11#
-[source,shell]
+[source.compact,shell]
 ----
 $ java -Xshare:off  -XX:DumpLoadedClassList=myclasses.txt -cp myapp.jar MyApp
 
@@ -440,14 +440,14 @@ $ java -Xshare:dump -XX:SharedArchiveFile=myapp.jsa \
 
 [.fragment]
 .Nutzung des AppCDS-Archives
-[source,shell]
+[source.compact,shell]
 ----
 $ java -XX:SharedArchiveFile=myapp.jsa -cp myapp.jar MyApp
 ----
 
 [.fragment]
 .NEU: Automatische Erstellung [version]#13#
-[source,shell]
+[source.compact,shell]
 ----
 $ java -XX:ArchiveClassesAtExit=myapp.jsa -cp myapp.jar MyApp
 ----
@@ -491,13 +491,14 @@ image::jlink_app_cds_image_size_and_startup_times.png[AppCDS Startup Times,heigh
 [.lightbg.forcebottom,background-video= "flight-cockpit.mp4",options="loop,muted",background-opacity="1"]
 == JDK Flight Recorder (JFR)
 
+[.degrade]
 === JDK Flight Recorder (JFR) [jep]#https://openjdk.java.net/jeps/328[JEP 328]#
 * OS, JVM, JDK & App Diagnostik
 * extrem geringer Overhead (~1%)
 * built-in & jederzeit aktivierbar
 * always-on möglich → Timemachine
 
-→ [.step.highlight-current-red]#icon:cogs[] **Production** Profiling & Monitoring#
+→ [.step.highlight-current-blue]#icon:cogs[] **Production** Profiling & Monitoring#
 
 [.decent.x-small]
 
@@ -642,8 +643,8 @@ JFR Eventtypen: https://bestsolution-at.github.io/jfr-doc/
 --
 
 
-[.small]
-=== Streaming API: Möglichkeiten
+[.small.degrade]
+=== Zugriffsmöglichkeiten
 
 [source.col2.fragment,java]
 .Passiv, eigener Prozess
@@ -867,16 +868,16 @@ data outside of the Java runtime […] without the brittleness and danger of JNI
 [.degrade]
 === Einfacher Funktionsaufruf
 
-[source,java]
+[source.compact,java]
 ----
 import java.lang.invoke.*;
 import jdk.incubator.foreign.*;
 
 class CallPid {
   public static void main(String... p) throws Throwable {
-    var libSymbol = CLinker.systemLookup().lookup("getpid").get();      <1>
-    var javaSig = MethodType.methodType(long.class);                    <2>
-    var nativeSig = FunctionDescriptor.of(CLinker.C_LONG);              <3>
+    var libSymbol = CLinker.systemLookup().lookup("getpid").get();          <1>
+    var javaSig = MethodType.methodType(long.class);                        <2>
+    var nativeSig = FunctionDescriptor.of(CLinker.C_LONG);                  <3>
 
     CLinker cABI = CLinker.getInstance();
     var getpid = cABI.downcallHandle(libSymbol, javaSig, nativeSig);
@@ -988,7 +989,7 @@ https://jdk.java.net/panama/[Project Panama Early-Access Builds]
 --
 
 
-[%notitle,background-video="native-python.mp4",background-size="contain"]
+[%notitle,background-video="native-python.mp4",background-size="contain",background-color="white"]
 === `jextract` Demo
  
 === `jextract` Demo (Transcript)
@@ -1072,7 +1073,7 @@ https://github.com/sundararajana/panama-jextract-samples
 [.lightbg,background-video="hammer.mp4",background-video-loop="true",background-opacity="0.8"]
 == Tooling
 
-=== Packaging Tool `jpackage` [jep]#https://openjdk.java.net/jeps/343[JEP 343]# [jep]#https://openjdk.java.net/jeps/392[JEP 392]#
+=== `jpackage` [jep]#https://openjdk.java.net/jeps/343[JEP 343]# [jep]#https://openjdk.java.net/jeps/392[JEP 392]#
 
 Werkzeug zum Erstellen & Paketieren eigenständiger Java-Applikationen 
 
@@ -1200,6 +1201,7 @@ image:return.png[Javadoc Result,role="plain"]
 == Details & Maintenance
 
 
+[.degrade]
 === Hilfreiche Nullpointers [jep]#https://openjdk.java.net/jeps/358[JEP 358]# [version]#14#
 
 [source,java]
@@ -1359,8 +1361,7 @@ _Helidon, Quarkus.io, Micronaut, Spring Fu, Ktor, …_ +
 * https://blog.arkey.fr/2021/09/04/a-practical-look-at-jep-412-in-jdk17-with-libsodium/[A practical look at JEP-412]
 * https://docs.oracle.com/en/java/javase/14/vm/class-data-sharing.html[Application Class-Data Sharing]
 * http://www.oracle.com/pls/topic/lookup?ctx=javase14&id=dynamic_CDS_archive[Dynamic CDS Archive]
-* https://blogs.oracle.com/javamagazine/understanding-the-jdks-new-superfast-garbage-collectors[Understanding the JDK’s +
-New Superfast Garbage Collectors]
+* https://blogs.oracle.com/javamagazine/understanding-the-jdks-new-superfast-garbage-collectors[Understanding the JDK’s New fast GCs]
 * https://entwickler.de/java/kurze-pause[Kurze Pause]
 * https://www.youtube.com/watch?v=B8k9QGvPxC0[State of Project Panama]
 --
@@ -1368,7 +1369,7 @@ New Superfast Garbage Collectors]
 
 [.col3-r.x-small]
 --
-.Contact
+.Kontakt
 icon:twitter[] https://twitter.com/bentolor[*@bentolor*]
 
 icon:at[] mailto:ben@tolor.de[]

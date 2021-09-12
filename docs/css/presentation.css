@@ -1,6 +1,70 @@
 @import url("../fonts/fontawesome/css/v4-shims.css");
-.center { text-align: center ;}
+@import url('../fonts/montserrat.css');
+@import url('../fonts/rajdhani.css');
 
+.title h2 {
+  text-transform: none;
+  font-weight: 500 !important;
+}
+.title h1 {
+  font-size: 3em;
+}
+
+.reveal {
+    font-family: 'Rajdhani', sans-serif;
+    font-weight: 500;
+    font-size: 42px;    
+}
+
+.reveal h1, .reveal h2 {
+    font-weight: 700;
+    letter-spacing: -0.03em;
+    line-height: 1em; 
+}
+
+
+/* Prägnantere Überschriften-Font. */
+.reveal h1,
+.reveal h2,
+.reveal h3,
+.reveal h4,
+.reveal h5,
+.reveal h6 {
+    font-family: "Montserrat", Impact, sans-serif;
+}
+.reveal h3,
+.reveal h4 {
+    margin: 0 0 0.6em;
+    }
+.reveal h3,
+.reveal h4,
+.reveal h5,
+.reveal h6 {
+    font-family: "Montserrat Alternates", Impact, sans-serif;
+    text-transform: none;
+    font-weight: 700; }
+.reveal h5,
+.reveal h6 {
+    font-family: 'Rajdhani', sans-serif;
+    margin: 1em 0 .3em 0;
+    color: #fff;
+    text-align: left;
+    font-weight: 700;
+    letter-spacing: -0.03em;
+    font-size: 100%;
+}
+.reveal .compact code,
+.reveal code.compact { font-size: 1.1em;  }
+.title .author { 
+  font-size: 1.6em;
+  font-weight: 100;
+  color: #33291f;
+  padding-top: 1em;
+}
+
+
+
+.center { text-align: center ;}
 section.forcebottom {   top: 600px !important; }
 section.forcetop {   top: 0px !important; }
 
@@ -422,6 +486,13 @@ DIV.refs LI:hover P A {
 
 .deleted {
   text-decoration: line-through;
+}
+
+.statement P {
+  font-weight: 500;
+  font-size: 1.6em;
+  margin: 0.4em 0em;
+  color:#342;
 }
 
 /* --------------------------------------------------- special slides styles */

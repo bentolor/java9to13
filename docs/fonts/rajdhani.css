@@ -1,0 +1,30 @@
+@font-face {
+  font-family: 'Rajdhani';
+  font-style: normal;
+  font-weight: 300;
+  src: local('Rajdhani Light'), local('Rajdhani-Light'), url(Rajdhani-Light.woff2) format('woff2'), url(Rajdhani-Light.woff) format('woff'), url(Rajdhani-Light.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Rajdhani';
+  font-style: normal;
+  font-weight: 400;
+  src: local('Rajdhani'), local('Rajdhani-Regular'),  url(Rajdhani-Regular.woff2) format('woff2'), url(Rajdhani-Regular.woff) format('woff'), url(Rajdhani-Regular.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Rajdhani';
+  font-style: normal;
+  font-weight: 500;
+  src: local('Rajdhani Medium'), local('Rajdhani-Medium'), url(Rajdhani-Medium.woff2) format('woff2'), url(Rajdhani-Medium.woff) format('woff'), url(Rajdhani-Medium.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Rajdhani';
+  font-style: normal;
+  font-weight: 600;
+  src: local('Rajdhani Semibold'), local('Rajdhani-Semibold'), url(Rajdhani-Semibold.woff2) format('woff2'), url(Rajdhani-Semibold.woff) format('woff'), url(Rajdhani-Semibold.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Rajdhani';
+  font-style: normal;
+  font-weight: 700;
+  src: local('Rajdhani Bold'), local('Rajdhani-Bold'), url(Rajdhani-Bold.woff2) format('woff2'), url(Rajdhani-Bold.woff) format('woff'), url(Rajdhani-Bold.ttf) format('truetype');
+}
