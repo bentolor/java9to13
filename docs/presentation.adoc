@@ -31,14 +31,17 @@
 :iconfont-remote!:
 :iconfont-name: fonts/fontawesome/css/all
 
-
+[.notes]
+--
+* 3 Motor-Upgrades … auf die ich mich in Java 17 freue
+--
 
 // [.lightbg, background-image="327-chevy-engine-1542516.jpg",background-opacity="0.9"]
-== 3 Motor-Upgrades
-[decent]#… auf die ich mich in Java 17 freue#
+//== 3 Motor-Upgrades
+//[decent]#… auf die ich mich in Java 17 freue#
 
 [.lightbg.forcebottom,background-video="time-passes-by-so-quickly.mp4",background-video-loop="true",background-opacity="1"]
-=== Mehr _Schwuppidizität_
+== Mehr _Schwuppidizität_
 [.notes]
 --
 … durch _niedriglatente GCs_ und schnellere JVM Start zur _Class-Data Sharing_
@@ -84,7 +87,7 @@
 // --
 
 
-[.lightbg,background-video= "relaxing.mp4",options="loop,muted",background-opacity="0.7"]
+[.lightbg,background-video= "relaxing.mp4",options="loop,muted",background-opacity="0.5"]
 == Agenda
 . Garbage Collectoren
 . Class-Data Sharing
@@ -104,9 +107,17 @@
 // --
 
 
-
-
+[.lightbg,background-video= "garbage-collecting.mp4",options="loop,muted",background-opacity="0.9"]
 == Garbage Collectoren
+[.notes]
+--
+. Kommen wir zum ersten Theme: GCs
+. Wichtiger Teil von Schwuppdizität
+. Zentral: Viele Verbesserung +2 neue GC Implementierungen
+. … aber ein blick auf: Was ist passiert?
+--
+
+
 
 [.degrade.x-small]
 === Timeline
@@ -387,6 +398,7 @@ https://docs.oracle.com/en/java/javase/17/gctuning/available-collectors.html
 
 
 
+[.lightbg,background-video= "sharing-pizza.mp4",options="loop,muted",background-opacity="1"]
 == Class Data Sharing 
 
 
@@ -476,7 +488,7 @@ image::jlink_app_cds_image_size_and_startup_times.png[AppCDS Startup Times,heigh
 --
 
 
-
+[.lightbg.forcebottom,background-video= "flight-cockpit.mp4",options="loop,muted",background-opacity="1"]
 == JDK Flight Recorder (JFR)
 
 === JDK Flight Recorder (JFR) [jep]#https://openjdk.java.net/jeps/328[JEP 328]#
@@ -624,6 +636,11 @@ try (var rs = new RecordingStream()) {
 }
 ----
 
+[.refs]
+--
+JFR Eventtypen: https://bestsolution-at.github.io/jfr-doc/
+--
+
 
 [.small]
 === Streaming API: Möglichkeiten
@@ -730,8 +747,7 @@ Recording mitlaufen lassen und bei Performance-Problemen rückwirkend seit Probl
 
 
 
-
-
+[.lightbg.forcetop,background-video= "pexels-cottonbro-7319201.mp4",options="loop,muted",background-opacity="1"]
 == Foreign Function & Memory API [preview]#Incubator# 
 // [jep]#https://openjdk.java.net/jeps/412[JEP 412]#
 
@@ -999,7 +1015,7 @@ https://github.com/sundararajana/panama-jextract-samples
 
 
 
-[.lightbg,background-video="hammer.mp4",background-video-loop="true",background-opacity="0.7"]
+[.lightbg,background-video="hammer.mp4",background-video-loop="true",background-opacity="0.8"]
 == Tooling
 
 === Packaging Tool `jpackage` [jep]#https://openjdk.java.net/jeps/343[JEP 343]# [jep]#https://openjdk.java.net/jeps/392[JEP 392]#
@@ -1126,6 +1142,7 @@ image:return.png[Javadoc Result,role="plain"]
 
 
 
+[.lightbg,background-video= "pexels-pavel-danilyuk-6158064.mp4",options="loop,muted",background-opacity="0.7"]
 == Details & Maintenance
 
 
@@ -1157,23 +1174,17 @@ Exception in thread "main" java.lang.NullPointerException: Cannot invoke <mark>"
 --
 
 
-[.small]
-=== JVM Diagnostics & Misc
+[.small.degrade]
+=== „Jahresinspektion“
 
-* Strongly Encapsulate JDK Internals [jep]#https://openjdk.java.net/jeps/391[JEP 391]#
-* macOS/AArch64 Port [jep]#https://openjdk.java.net/jeps/391[JEP 391]#
+* **Strongly Encapsulate JDK Internals** [jep]#https://openjdk.java.net/jeps/391[JEP 391]#
+* **macOS/AArch64 Port** [jep]#https://openjdk.java.net/jeps/391[JEP 391]#
 * SecurityManager `forRemoval` [jep]#https://openjdk.java.net/jeps/411[JEP 411]#
 * Always-Strict Floating-Point Semantics [jep]#https://openjdk.java.net/jeps/306[JEP 306]#
-* Asynchrones _Unified JVM Logging_ (`-Xlog:async`)
+* **Asynchrones _Unified JVM Logging_** (`-Xlog:async`)
 * Ausführlichere Crashs: `-XX:+ExtensiveErrorReports`
-
-x
-
-* Unicode  x
-* Kryptographie: 
-** Cipher Streams 
-** Signatures
-** Enhanced PRNG  [jep]#https://openjdk.java.net/jeps/356[JEP 356]#
+* Unicode 10 → 13; CLDR 33 → 39
+* Krypto: Deprecated Ciphers/Signatures, Enhanced PRNG [jep]#https://openjdk.java.net/jeps/356[JEP 356]#
 
 [.notes]
 --
@@ -1189,6 +1200,7 @@ x
 
 
 
+[.lightbg,background-video= "pexels-koolshooters-6909829.mp4",options="loop,muted",background-opacity="1"]
 == GraalVM
 
 
@@ -1248,7 +1260,7 @@ _Helidon, Quarkus.io, Micronaut, Spring Fu, Ktor, …_ +
 --
 
 
-== Vielen Dank!
+// == Vielen Dank!
 
 
 // [%notitle, background-image="tweet-jdk-evolving.png"]
@@ -1259,52 +1271,61 @@ _Helidon, Quarkus.io, Micronaut, Spring Fu, Ktor, …_ +
 // --
 
 
-[.lightbg,background-video="industrial.mp4",background-video-loop="true",background-opacity="0.6"]
-== Ressourcen
+[.lightbg.stretch,background-video="industrial.mp4",background-video-loop="true",background-opacity="0.6"]
+== Vielen Dank!
 
-[.col3-l.xx-small]
+[.col3-l.x-small]
+--
+.Tools
+* https://openjdk.java.net/projects/jmc/8/[JDK Flight Mission Control 8]
+* https://www.graalvm.org/[GraalVM]
+* https://jdk.java.net/panama/[Panama EAP Builds (`jextract`)]
+
+.Frameworks
+* https://github.com/quick-perf/quickperf[QuickPerf]
+* https://github.com/moditect/jfrunit[JfrUnit]
+* https://helidon.io/#/[helidon.io]
+* https://micronaut.io/[micronaut.io]
+* https://quarkus.io/[quarkus.io]
+* https://github.com/spring-projects-experimental/spring-fu[Spring Fu]
+* https://ktor.io/[Ktor.io]
+--
+
+
+[.col3-c.x-small]
 --
 .Referenzwerke
+* https://javaalmanac.io/[Java Almanac]
+* https://bestsolution-at.github.io/jfr-doc/[JFR Eventtypen]
 * https://chriswhocodes.com/vm-options-explorer.html[VM Options Explorer]
 * https://docs.oracle.com/en/java/javase/17/gctuning/available-collectors.html[HotSpot Tuning Guide: Available Collectors]
+* https://github.com/sundararajana/panama-jextract-samples[`jextract`-Examples]
 
 .Artikel
 * https://blog.arkey.fr/2021/09/04/a-practical-look-at-jep-412-in-jdk17-with-libsodium/[A practical look at JEP-412]
 * https://docs.oracle.com/en/java/javase/14/vm/class-data-sharing.html[Application Class-Data Sharing]
 * http://www.oracle.com/pls/topic/lookup?ctx=javase14&id=dynamic_CDS_archive[Dynamic CDS Archive]
-* https://blogs.oracle.com/javamagazine/understanding-the-jdks-new-superfast-garbage-collectors[Understanding the JDK’s New Superfast Garbage Collectors]
+* https://blogs.oracle.com/javamagazine/understanding-the-jdks-new-superfast-garbage-collectors[Understanding the JDK’s +
+New Superfast Garbage Collectors]
 * https://entwickler.de/java/kurze-pause[Kurze Pause]
-
-.Tools
-* http://jdk.java.net/jmc/[JDK Mission Control]
-
-.Weiterführendes
 * https://www.youtube.com/watch?v=B8k9QGvPxC0[State of Project Panama]
-
-
-.Tools
-* https://www.graalvm.org/[GraalVM]
-* https://openjdk.java.net/projects/jmc/8/[JDK Flight Mission Control 8]
-* https://chriswhocodes.com/hotspot_options_openjdk17.html[VM Options Explorer ]
 --
 
 
-[.col3-c.xx-small]
+[.col3-r.x-small]
 --
 .Contact
-* Twitter https://twitter.com/bentolor[*@bentolor*]
-* Email: mailto:ben@tolor.de[]
+icon:twitter[] https://twitter.com/bentolor[*@bentolor*]
 
-.Sources
-* icon:code-branch[Github] https://github.com/bentolor/java9to13[*GitHub Repo with Source Code Examples & Slide Sources*]
-* https://de.freeimages.com/photographer/s_lim363-49742[Background image],
-  https://www.pexels.com/video/a-bee-on-a-yellow-flower-2048452/[Flowers], https://www.pexels.com/video/relaxing-at-the-beach-1449880/[Relaxing at the beach], https://www.pexels.com/video/cup-of-coffee-on-top-of-coffee-beans-855414/[Coffee Beans], https://www.pexels.com/video/close-up-video-of-a-woman-studying-855418/[Woman studying], https://www.pexels.com/video/white-keyboard-2219383/[White keyboard], https://www.pexels.com/video/jack-hammering-pavement-855956/[Jackhammer], https://www.pexels.com/video/globe-plasma-light-1192113/[Plasma Light], https://www.pexels.com/video/heavy-equipment-loading-cement-2073130/[Industrial Site]
+icon:at[] mailto:ben@tolor.de[]
+
+.Proudly made with
+* https://docs.asciidoctor.org/reveal.js-converter/latest/[`asciidoctor-revealjs`]
+* Videos: https://www.pexels.com/[pexels.com]
+* Bilder: https://de.freeimages.com/[freeimages.com]
+
 --
 
-[.col3-r.small]
---
-* xxx
---
 
 [pass]
 ++++
