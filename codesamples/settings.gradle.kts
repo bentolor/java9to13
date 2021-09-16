@@ -1,1 +1,0 @@
-rootProject.name = "Java JDK 9-13 Examples"
